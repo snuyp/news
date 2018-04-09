@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">News</string>
+
+
+<!--Weather-->
+    <string name="pressure">Pressure </string>
+    <string name="humidity">Humidity </string>
+    <string name="sunrise_time">Sunrise</string>
+    <string name="sunset_time">Sunset</string>
+    <string name="wind_speed">Wind speed</string>
+</resources>
