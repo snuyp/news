@@ -23,4 +23,8 @@ public interface NewsService {
     Call<News> getHeadlines(
             @Url String apiKey
     );
+    @GET
+    Call<News> getSearch(
+            @Url String apiKey
+    );
 }

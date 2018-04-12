@@ -9,19 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.dima.news.Interface.IconBetterIdeaService;
 import com.example.dima.news.Interface.ItemClickListener;
 import com.example.dima.news.ListNews;
 import com.example.dima.news.R;
-import com.example.dima.news.common.Common;
-import com.example.dima.news.model.icons.IconBetterIdea;
+
 import com.example.dima.news.model.news.WebSite;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -35,9 +30,8 @@ class ListSourceViewHolder extends RecyclerView.ViewHolder implements View.OnCli
     public ListSourceViewHolder(View itemView) {
         super(itemView);
 
-        sourceImage = itemView.findViewById(R.id.source_image);
         sourceTitle = itemView.findViewById(R.id.source_name);
-
+        sourceImage = itemView.findViewById(R.id.source_image);
         itemView.setOnClickListener(this);
     }
 
@@ -55,12 +49,12 @@ class ListSourceViewHolder extends RecyclerView.ViewHolder implements View.OnCli
 public class ListSourceAdapter extends RecyclerView.Adapter<ListSourceViewHolder> {
     private Context context;
     private WebSite webSite;
-    private IconBetterIdeaService ideaService;
+
 
     public ListSourceAdapter(Context context, WebSite webSite) {
         this.context = context;
         this.webSite = webSite;
-        ideaService = Common.getIconService();
+
     }
 
     @NonNull
@@ -73,25 +67,6 @@ public class ListSourceAdapter extends RecyclerView.Adapter<ListSourceViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final ListSourceViewHolder holder, int position) {
-        StringBuilder  iconBetterApi = new StringBuilder("https://icons.better-idea.org/allicons.jso n?url=");
-        iconBetterApi.append(webSite.getSources().get(position).getUrl());
-        ideaService.getIconUrl(iconBetterApi.toString()).enqueue(new Callback<IconBetterIdea>() {
-
-            @Override
-            public void onResponse(Call<IconBetterIdea> call, Response<IconBetterIdea> response)  {
-                if(response.body().getIcons().size()>0)
-                {
-                    Picasso.with(context)
-                            .load(response.body().getIcons().get(0).getUrl())
-                            .into(holder.sourceImage);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<IconBetterIdea> call, Throwable t) {
-
-            }
-        });
 
         holder.sourceTitle.setText(webSite.getSources().get(position).getName());
 
@@ -104,6 +79,7 @@ public class ListSourceAdapter extends RecyclerView.Adapter<ListSourceViewHolder
 
             }
         });
+
 
     }
 

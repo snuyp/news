@@ -1,14 +1,14 @@
 package com.example.dima.news.common;
 
-import android.support.annotation.NonNull;
-
-import com.example.dima.news.Interface.IconBetterIdeaService;
 import com.example.dima.news.Interface.NewsService;
 import com.example.dima.news.Interface.WeatherService;
-import com.example.dima.news.model.news.News;
-import com.example.dima.news.remote.IconBetterIdeaClient;
 import com.example.dima.news.remote.NewsClient;
 import com.example.dima.news.remote.WeatherClient;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class Common {
@@ -17,8 +17,7 @@ public class Common {
 
     public static final String API_KEY = "5e4c61bd768b476a9fc0e5c7e6b71eac";
     public static final String WEATHER_API_KEY = "b6907d289e10d714a6e88b30761fae22";
-    public static String language = "ru";
-    public static String city = "Minsk";
+
     public static String units = "metric";
 
 
@@ -27,10 +26,6 @@ public class Common {
         return  NewsClient.getClient(BASE_URL).create(NewsService.class);
     }
 
-    public static IconBetterIdeaService getIconService()
-    {
-        return  IconBetterIdeaClient.getClient().create(IconBetterIdeaService.class);
-    }
 
     public static String getApiUrl(String source)
     {
@@ -39,6 +34,21 @@ public class Common {
                 .append("&apiKey=")
                 .append(API_KEY)
                 .toString();
+    }
+    public static String getApiUrlSearch(String search,String fromDate,String toDate)
+    {
+        StringBuilder apiUrl= new StringBuilder("https://newsapi.org/v2/everything?q=");
+        return apiUrl.append(search)
+                .append("&from=")
+                .append(fromDate)
+                .append("&to=")
+                .append(toDate)
+                .append("&sortBy=popularity")
+                .append("&apiKey=")
+                .append(API_KEY)
+                .toString();
+//      for example
+//      https://newsapi.org/v2/everything?q=apple&from=2018-04-09&to=2018-04-09&sortBy=popularity&apiKey=5e4c
     }
 
     public static WeatherService getWeatherService()
