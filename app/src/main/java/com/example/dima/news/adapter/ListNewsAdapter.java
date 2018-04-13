@@ -3,8 +3,11 @@ package com.example.dima.news.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import com.example.dima.news.R;
 import com.example.dima.news.common.ISO8601Parse;
 import com.example.dima.news.model.news.Article;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -49,7 +53,11 @@ class ListNewsViewHolder extends RecyclerView.ViewHolder implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        itemClickListener.onClick(v, getAdapterPosition(), false);
+        try {
+            itemClickListener.onClick(v, getAdapterPosition(), false);
+        } catch (NullPointerException e) {
+
+        }
     }
 }
 
@@ -70,37 +78,47 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder> {
         return new ListNewsViewHolder(itemView);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final ListNewsViewHolder holder, int position) {
-        Picasso.with(context)
-                .load(articleList.get(position).getUrlToImage())
-                .into(holder.articleImage);
-
-        if (articleList.get(position).getTitle().length() > 65) {
-            holder.articleTitle.setText(articleList.get(position).getTitle().substring(0, 65) + "...");
-        } else {
-            holder.articleTitle.setText(articleList.get(position).getTitle());
-        }
-        Date date = null;
-        try
-        {
-            date = ISO8601Parse.parse(articleList.get(position).getPublishedAt());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        if (date != null) {
-            holder.articleTime.setReferenceTime(date.getTime());
-        }
-
-        holder.setItemClickListener(new ItemClickListener() {
-            @Override
-            public void onClick(View view, int position, boolean isLongClick) {
-                Intent intent = new Intent(context, DetailArticle.class);
-                intent.putExtra("webURL",articleList.get(position).getUrl());
-                context.startActivity(intent);
+        try {
+            if (articleList.get(position).getUrlToImage().isEmpty()) {
+                Picasso.with(context)
+                        .load(R.drawable.ic_terrain_black_24dp)
+                        .into(holder.articleImage);
+            } else {
+                Picasso.with(context)
+                        .load(articleList.get(position).getUrlToImage())
+                        .error(R.drawable.ic_terrain_black_24dp)
+                        .into(holder.articleImage);
             }
-        });
+
+            if (articleList.get(position).getTitle().length() > 65) {
+                holder.articleTitle.setText(articleList.get(position).getTitle().substring(0, 65) + "...");
+            } else {
+                holder.articleTitle.setText(articleList.get(position).getTitle());
+            }
+            Date date = null;
+            try {
+                date = ISO8601Parse.parse(articleList.get(position).getPublishedAt());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            if (date != null) {
+                holder.articleTime.setReferenceTime(date.getTime());
+            }
+
+            holder.setItemClickListener(new ItemClickListener() {
+                @Override
+                public void onClick(View view, int position, boolean isLongClick) {
+                    Intent intent = new Intent(context, DetailArticle.class);
+                    intent.putExtra("webURL", articleList.get(position).getUrl());
+                    context.startActivity(intent);
+                }
+            });
+        } catch (NullPointerException e) {
+            Log.e("ERROR", e.getMessage());
+        }
+
     }
 
     @Override

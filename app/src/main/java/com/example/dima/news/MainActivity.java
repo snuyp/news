@@ -1,12 +1,9 @@
 package com.example.dima.news;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,11 +13,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dima.news.Interface.NewsService;
+import com.example.dima.news.Interface.RatesService;
 import com.example.dima.news.Interface.WeatherService;
 import com.example.dima.news.adapter.ListNewsAdapter;
 import com.example.dima.news.adapter.ListSourceAdapter;
@@ -32,8 +29,6 @@ import com.example.dima.news.model.weather.CurrentWeather;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.util.Objects;
-
 import dmax.dialog.SpotsDialog;
 import io.paperdb.Paper;
 import retrofit2.Call;
@@ -44,9 +39,10 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView listWebsite;
     private RecyclerView.LayoutManager layoutManager;
-    CollapsingToolbarLayout collapsingToolbarLayout;
+
     private NewsService newsService;
     private WeatherService weatherService;
+    private RatesService rateService;
 
     private ListSourceAdapter adapter;
     private ListNewsAdapter newsAdapter;
@@ -65,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         newsService = Common.getNewsService();
         weatherService = Common.getWeatherService();
+        rateService = Common.getRatesService();
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -73,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
                 loadWebSite(true);
             }
         });
-        collapsingToolbarLayout = findViewById(R.id.collapsing);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -94,6 +90,11 @@ public class MainActivity extends AppCompatActivity {
 
         loadWebSite(false);
         loadWeather();
+    }
+
+    private void loadRates() {
+        swipeRefreshLayout.setRefreshing(true);
+
     }
 
     @Override

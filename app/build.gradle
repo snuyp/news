@@ -39,6 +39,7 @@ dependencies {
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'com.github.d-max:spots-dialog:0.7@aar'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.tomer:fadingtextview:2.5'
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'

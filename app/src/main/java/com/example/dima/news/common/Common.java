@@ -1,23 +1,21 @@
 package com.example.dima.news.common;
 
 import com.example.dima.news.Interface.NewsService;
+import com.example.dima.news.Interface.RatesService;
 import com.example.dima.news.Interface.WeatherService;
 import com.example.dima.news.remote.NewsClient;
+import com.example.dima.news.remote.RatesClient;
 import com.example.dima.news.remote.WeatherClient;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 
 public class Common {
     private static final String BASE_URL = "https://newsapi.org/v2/";
     private static final String BASE_WEATHER_URL = "http://openweathermap.org/data/2.5/";
+    private static final String BASE_RATES_URL = "http://data.fixer.io/api/";
 
     public static final String API_KEY = "5e4c61bd768b476a9fc0e5c7e6b71eac";
     public static final String WEATHER_API_KEY = "b6907d289e10d714a6e88b30761fae22";
-
+    public static final String RATE_KEY = "99626231aec43ac815d63ec6d1cf55a6";
     public static String units = "metric";
 
 
@@ -55,5 +53,8 @@ public class Common {
     {
         return WeatherClient.getClient(BASE_WEATHER_URL).create(WeatherService.class);
     }
-
+    public static RatesService getRatesService()
+    {
+        return RatesClient.getClient(BASE_RATES_URL).create(RatesService.class);
+    }
 }
