@@ -11,108 +11,108 @@
     >
 
     <android.support.design.widget.CoordinatorLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/app_bar_layout"
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:layout_height="350dp"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleTextAppearance="@android:color/transparent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/collapsing"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
-                app:expandedTitleTextAppearance="@android:color/transparent"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                android:layout_height="match_parent">
 
-                <RelativeLayout
+                <com.flaviofaria.kenburnsview.KenBurnsView
+                    android:id="@+id/image_weather"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/zemlya_solntse_planeta_poverkhnost_zvezdy_99478_1920x1080"/>
 
-                    <com.flaviofaria.kenburnsview.KenBurnsView
-                        android:id="@+id/image_weather"
+                <LinearLayout
+                    android:id="@+id/open_weather_forecast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/weather_name_t"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/zemlya_solntse_planeta_poverkhnost_zvezdy_99478_1920x1080"/>
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:background="#8d333333"
+                        android:text="@string/city"
+                        android:textColor="@android:color/white"
+                        android:textSize="30sp"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#8d333333"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/weather_wind_speed"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:layout_marginStart="8dp"
+                            android:gravity="start"
+                            android:text="@string/wind_speed_humidity"
+                            android:textColor="@android:color/white"
+                            android:textSize="15sp"
+                            />
+                        <ImageView
+                            android:id="@+id/weather_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5"
+                            app:srcCompat="@drawable/ic_wb_sunny_white_24dp"/>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:background="#8d333333"
+                        android:orientation="horizontal"
+                        >
 
                         <TextView
-                            android:id="@+id/weather_name_t"
+                            android:id="@+id/weather_pressure"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center_horizontal"
-                            android:background="#8d333333"
-                            android:text="@string/city"
+                            android:layout_weight="5"
+                            android:gravity="start"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/presssure"
                             android:textColor="@android:color/white"
-                            android:textSize="30sp"
+                            android:textSize="15sp"
                             />
-                        <LinearLayout
+
+                        <TextView
+                            android:id="@+id/weather_sunrise"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="#8d333333"
-                            android:orientation="horizontal">
+                            android:layout_weight="5"
+                            android:gravity="center_horizontal"
+                            android:text="Sunrise,sunset"
+                            android:textColor="@android:color/white"
+                            android:textSize="15sp"
+                            />
 
-                            <TextView
-                                android:id="@+id/weather_wind_speed"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="5"
-                                android:layout_marginStart="8dp"
-                                android:gravity="start"
-                                android:text="@string/wind_speed_nhumidity"
-                                android:textColor="@android:color/white"
-                                android:textSize="15sp"
-                                />
-                            <ImageView
-                                android:id="@+id/weather_image"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="5"
-                                app:srcCompat="@drawable/ic_wb_sunny_black_24dp"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#8d333333"
-                            android:orientation="horizontal"
-                            >
-
-                            <TextView
-                                android:id="@+id/weather_pressure"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="5"
-                                android:gravity="start"
-                                android:layout_marginStart="8dp"
-                                android:text="@string/presssure"
-                                android:textColor="@android:color/white"
-                                android:textSize="15sp"
-                                />
-
-                            <TextView
-                                android:id="@+id/weather_sunrise"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="5"
-                                android:gravity="center_horizontal"
-                                android:text="Sunrise,sunset"
-                                android:textColor="@android:color/white"
-                                android:textSize="15sp"
-                                />
-
-                        </LinearLayout>
                     </LinearLayout>
-                </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -141,5 +141,18 @@
                 android:layout_height="match_parent">
             </android.support.v7.widget.RecyclerView>
         </android.support.v4.widget.SwipeRefreshLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/get_weather_forecast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+
+            app:backgroundTint="@android:color/white"
+            app:elevation="6dp"
+            app:layout_anchor="@id/app_bar_layout"
+            app:layout_anchorGravity="bottom|right|end"
+            app:pressedTranslationZ="12dp"
+            />
     </android.support.design.widget.CoordinatorLayout>
 </RelativeLayout>

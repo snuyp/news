@@ -1,4 +1,4 @@
-package com.example.dima.news;
+package com.example.dima.news.common;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

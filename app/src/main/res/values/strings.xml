@@ -103,8 +103,11 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="presssure">Pressure...</string>
-    <string name="wind_speed_nhumidity">Wind speed..., \\nhumidity...</string>
-    <string name="city">City...</string>
+    <string name="presssure">Pressure…</string>
+    <string name="wind_speed_humidity">Wind speed…\nHumidity…</string>
+    <string name="city">City…</string>
     <string name="find_sources_that_display_news_in_a_specific_language">Find sources that display news in a specific language</string>
+
+    <string name="wi_wind_south_west">&#xf05a;</string>
+    <string name="wi_wind_south_east">&#xf05b;</string>
 </resources>

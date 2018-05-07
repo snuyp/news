@@ -80,6 +80,7 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final ListNewsViewHolder holder, int position) {
+
         try {
             if (articleList.get(position).getUrlToImage().isEmpty()) {
                 Picasso.with(context)

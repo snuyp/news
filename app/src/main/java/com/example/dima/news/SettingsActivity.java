@@ -19,6 +19,8 @@ import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import com.example.dima.news.common.AppCompatPreferenceActivity;
+
 import java.util.List;
 
 /**

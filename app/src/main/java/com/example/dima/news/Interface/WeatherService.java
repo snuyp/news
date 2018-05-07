@@ -1,6 +1,7 @@
 package com.example.dima.news.Interface;
 
 import com.example.dima.news.model.weather.CurrentWeather;
+import com.example.dima.news.model.weather.ForecastWeather;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -18,11 +19,10 @@ public interface WeatherService {
             @Query("appid") String appid
     );
 
-//    @GET("forecast")
-//    Call<WeatherForecast> getForecast(
-//            @Query("lat") Double lat,
-//            @Query("lon") Double lon,
-//            @Query("units") String units,
-//            @Query("appid") String appid
-//    );
+    @GET("forecast?")
+    Call<ForecastWeather> getForecast(
+            @Query("q") String q,
+            @Query("units") String units,
+            @Query("appid") String appid
+    );
 }

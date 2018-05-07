@@ -13,7 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.dima.news.Interface.NewsService;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private NewsService newsService;
     private WeatherService weatherService;
-    private RatesService rateService;
+
 
     private ListSourceAdapter adapter;
     private ListNewsAdapter newsAdapter;
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView cityTemp, sun, windSpeedHumidity, pressure;
     private ImageView weatherImage;
+    private LinearLayout weatherForecast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
         newsService = Common.getNewsService();
         weatherService = Common.getWeatherService();
-        rateService = Common.getRatesService();
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -88,6 +90,15 @@ public class MainActivity extends AppCompatActivity {
         pressure = findViewById(R.id.weather_pressure);
         weatherImage = findViewById(R.id.weather_image);
 
+        weatherForecast = findViewById(R.id.open_weather_forecast);
+        weatherForecast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,WeatherForecastActivity.class);
+                startActivity(intent);
+            }
+        });
+
         loadWebSite(false);
         loadWeather();
     }
@@ -103,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setBackgroundColor(getResources().getColor(R.color.black_overlay));
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
