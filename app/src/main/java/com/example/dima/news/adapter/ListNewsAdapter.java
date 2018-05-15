@@ -1,17 +1,13 @@
 package com.example.dima.news.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.dima.news.DetailArticle;
@@ -20,7 +16,6 @@ import com.example.dima.news.R;
 import com.example.dima.news.common.ISO8601Parse;
 import com.example.dima.news.model.news.Article;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;

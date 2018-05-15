@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         weatherForecast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,WeatherForecastActivity.class);
+                Intent intent = new Intent(MainActivity.this, WeatherForecastActivity.class);
                 startActivity(intent);
             }
         });
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                    loadSearchArticles(query);
+                loadSearchArticles(query);
                 return true;
             }
 
@@ -158,39 +158,47 @@ public class MainActivity extends AppCompatActivity {
     private void loadWeather() {
         swipeRefreshLayout.setRefreshing(true);
         dialog.show();
-        String city = PreferenceManager.getDefaultSharedPreferences(this).getString("city", "");
+        final String city = PreferenceManager.getDefaultSharedPreferences(this).getString("city", "");
 
         weatherService.getToday(city, Common.units, Common.WEATHER_API_KEY).enqueue(new Callback<CurrentWeather>() {
             @Override
-            public void onResponse(Call<CurrentWeather> call, Response<CurrentWeather> response) {
-                CurrentWeather currentWeather = response.body();
-                String cityT = currentWeather.getName() + " " + currentWeather.getMain().getTemp().toString();
-                cityTemp.setText(cityT);
-                pressure.setText(
-                        String.format("%s %s", getResources().getString(R.string.pressure),
-                                currentWeather.getMain().getPressure()));
+            public void onResponse(@NonNull Call<CurrentWeather> call, @NonNull Response<CurrentWeather> response) {
+                CurrentWeather currentWeather = null;
+                if (response.body() != null) {
+                    currentWeather = response.body();
+                    String cityT = currentWeather.getName() + " " + currentWeather.getMain().getTemp().toString();
+                    cityTemp.setText(cityT);
+                    pressure.setText(
+                            String.format("%s %s", getResources().getString(R.string.pressure),
+                                    currentWeather.getMain().getPressure()));
 
-                windSpeedHumidity.setText(
-                        String.format("%s %s\n%s %s", getResources().getString(R.string.wind_speed),
-                                currentWeather.getWind().getSpeed(), getResources().getString(R.string.humidity),
-                                currentWeather.getMain().getHumidity()));
+                    windSpeedHumidity.setText(
+                            String.format("%s %s\n%s %s", getResources().getString(R.string.wind_speed),
+                                    currentWeather.getWind().getSpeed(), getResources().getString(R.string.humidity),
+                                    currentWeather.getMain().getHumidity()));
 
-                sun.setText(String.format("%s%s", currentWeather.getSys().getSunrise(), currentWeather.getSys().getSunset()));
+                    sun.setText(String.format("%s%s", currentWeather.getSys().getSunrise(), currentWeather.getSys().getSunset()));
 
-//                temp_min_max.setText
-//                        (String.format("%s\n%s", currentWeather.getMain().getTempMax(), currentWeather.getMain().getTempMin()));
+                    Picasso.with(getBaseContext())
+                            .load(currentWeather.getWeather().get(0).getIcon())
+                            .into(weatherImage);
 
-                Picasso.with(getBaseContext())
-                        .load(currentWeather.getWeather().get(0).getIcon())
-                        .into(weatherImage);
+                    dialog.dismiss();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                else
+                {
+                    cityTemp.setText(R.string.openWeatherMap_not_working);
 
+
+                }
                 dialog.dismiss();
                 swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<CurrentWeather> call, Throwable t) {
-
+                Log.e("ERROR", t.getMessage());
             }
         });
 
@@ -232,35 +240,35 @@ public class MainActivity extends AppCompatActivity {
         } else {
             swipeRefreshLayout.setRefreshing(true);
             loadWeather();
-                newsService.getSources(languageSource, Common.API_KEY).enqueue(new Callback<WebSite>() {
-                    @Override
-                    public void onResponse(@NonNull Call<WebSite> call, @NonNull Response<WebSite> response) {
-                        adapter = new ListSourceAdapter(getBaseContext(), response.body());
-                        adapter.notifyDataSetChanged();
-                        listWebsite.setAdapter(adapter);
+            newsService.getSources(languageSource, Common.API_KEY).enqueue(new Callback<WebSite>() {
+                @Override
+                public void onResponse(@NonNull Call<WebSite> call, @NonNull Response<WebSite> response) {
+                    adapter = new ListSourceAdapter(getBaseContext(), response.body());
+                    adapter.notifyDataSetChanged();
+                    listWebsite.setAdapter(adapter);
 
-                        //Save to cache
-                        Paper.book().write("cache", new Gson().toJson(response.body()));
+                    //Save to cache
+                    Paper.book().write("cache", new Gson().toJson(response.body()));
 
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
+                    swipeRefreshLayout.setRefreshing(false);
+                }
 
-                    @Override
-                    public void onFailure(@NonNull Call<WebSite> call, @NonNull Throwable t) {
-                        Log.e("Failure", "Failure" + t.getMessage());
-                    }
-                });
+                @Override
+                public void onFailure(@NonNull Call<WebSite> call, @NonNull Throwable t) {
+                    Log.e("Failure", "Failure" + t.getMessage());
+                }
+            });
 
         }
     }
-    public void loadSearchArticles(String search)
-    {
+
+    public void loadSearchArticles(String search) {
         int agoDay = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("search_articles", ""));
         IntervalDays intervalDays = new IntervalDays(agoDay);
         String today = intervalDays.getToday();
         String daysAgo = intervalDays.getDaysAgo();
 
-        newsService.getSearch(Common.getApiUrlSearch(search,daysAgo,today)).enqueue(new Callback<News>() {
+        newsService.getSearch(Common.getApiUrlSearch(search, daysAgo, today)).enqueue(new Callback<News>() {
             @Override
             public void onResponse(Call<News> call, Response<News> response) {
                 newsAdapter = new ListNewsAdapter(response.body().getArticles(), getBaseContext());

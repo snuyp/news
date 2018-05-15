@@ -1,7 +1,14 @@
 package com.example.dima.news.model.weather;
 
+import android.util.Log;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Dima on 27.04.2018.
@@ -94,6 +101,20 @@ public class List {
 
     public String getDtTxt() {
         return dtTxt;
+    }
+    public String getDayOfWeek()  {
+        String[] date = getDtTxt().split(" ");
+        SimpleDateFormat format1=new SimpleDateFormat("yyyy-MM-dd");
+        Date dt1= null;
+        try {
+            dt1 = format1.parse(date[0]);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.e("ERROR",e.getMessage());
+        }
+        DateFormat format2=new SimpleDateFormat("EEEE");
+        String finalDay=format2.format(dt1);
+        return finalDay;
     }
 
     public void setDtTxt(String dtTxt) {

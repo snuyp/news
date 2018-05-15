@@ -14,7 +14,6 @@ import com.example.dima.news.ListNews;
 import com.example.dima.news.R;
 
 import com.example.dima.news.model.news.WebSite;
-import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

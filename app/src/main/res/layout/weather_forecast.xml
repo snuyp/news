@@ -1,45 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.dima.news.ListNews">
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            />
+    android:orientation="vertical">
 
 
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/swipe_refresh_weather"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.example.dima.news.WeatherForecastActivity"
-        >
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/weather_recyclerView"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:theme="@style/ThemeOverlay.AppCompat.Light"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary">
 
-</android.support.design.widget.CoordinatorLayout>
+            <ImageView
+                android:id="@+id/close_toggle_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="2dp"
+                android:background="#ffffff"
+                android:textColor="#000000"
+                app:srcCompat="@drawable/ic_swap_vert_black_24dp"/>
+        </RelativeLayout>
 
+        <com.github.aakira.expandablelayout.ExpandableWeightLayout
+            android:id="@+id/expandableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:background="@color/colorPrimaryDark"
+            android:padding="8dp"
+            app:ael_duration="1000"
+            app:ael_expanded="false"
+            app:ael_interpolator="anticipateOvershoot">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/weather_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:theme="@style/ThemeOverlay.AppCompat.Light"/>
+
+        </com.github.aakira.expandablelayout.ExpandableWeightLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/colorAccent">
+
+            <Button
+                android:id="@+id/weather_forecast_on_four_days"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="8dp"
+                android:background="#000000"
+                android:text="@string/weather_forecast_on_4_days"
+                android:textColor="#FFF"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:orientation="horizontal"
+            >
+
+            <Button
+                android:id="@+id/todayButton"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="8dp"
+                android:text="@string/today"
+                android:layout_weight="1"
+                android:background="#000000"
+                android:textColor="#FFF"/>
+
+            <Button
+                android:id="@+id/tomorrow_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:background="#000000"
+                android:textColor="#FFF"/>
+
+            <Button
+                android:id="@+id/after_tomorrow_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:background="#000000"
+                android:textColor="#FFF"/>
+
+            <Button
+                android:id="@+id/aafter_three_days_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:background="#000000"
+                android:textColor="#FFF"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

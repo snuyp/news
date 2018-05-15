@@ -47,6 +47,9 @@ dependencies {
     //Expandable layout
     implementation 'com.github.aakira:expandable-layout:1.6.0@aar'
 
+    //Graph
+    implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
+
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
