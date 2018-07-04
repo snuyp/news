@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.dima.news.Interface.NewsService;
-import com.example.dima.news.Interface.RatesService;
 import com.example.dima.news.Interface.WeatherService;
 import com.example.dima.news.adapter.ListNewsAdapter;
 import com.example.dima.news.adapter.ListSourceAdapter;
@@ -101,11 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
         loadWebSite(false);
         loadWeather();
-    }
-
-    private void loadRates() {
-        swipeRefreshLayout.setRefreshing(true);
-
     }
 
     @Override
@@ -267,8 +261,7 @@ public class MainActivity extends AppCompatActivity {
         IntervalDays intervalDays = new IntervalDays(agoDay);
         String today = intervalDays.getToday();
         String daysAgo = intervalDays.getDaysAgo();
-
-        newsService.getSearch(Common.getApiUrlSearch(search, daysAgo, today)).enqueue(new Callback<News>() {
+        newsService.getSearch(search,daysAgo,today,"popularity",Common.API_KEY).enqueue(new Callback<News>() {
             @Override
             public void onResponse(Call<News> call, Response<News> response) {
                 newsAdapter = new ListNewsAdapter(response.body().getArticles(), getBaseContext());

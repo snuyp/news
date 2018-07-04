@@ -97,7 +97,7 @@ public class ListNews extends AppCompatActivity {
         if(!isRefreshed)
         {
             dialog.show();
-            service.getHeadlines(Common.getApiUrl(source))
+            service.getHeadlines(source,Common.API_KEY)
                     .enqueue(new Callback<News>() {
                         @Override
                         public void onResponse(Call<News> call, Response<News> response) {

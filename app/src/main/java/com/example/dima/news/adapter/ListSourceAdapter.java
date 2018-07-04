@@ -75,7 +75,6 @@ public class ListSourceAdapter extends RecyclerView.Adapter<ListSourceViewHolder
                 Intent intent = new Intent(context, ListNews.class);
                 intent.putExtra("source", webSite.getSources().get(position).getId());
                 context.startActivity(intent);
-
             }
         });
 

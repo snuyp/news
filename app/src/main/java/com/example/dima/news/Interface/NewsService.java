@@ -13,18 +13,27 @@ import retrofit2.http.Url;
  */
 
 public interface NewsService {
+
+
     @GET("sources?")
     Call<WebSite> getSources(
         @Query("language") String language,
         @Query("apiKey") String apiKey
     );
 
-    @GET
+    @GET("top-headlines")
     Call<News> getHeadlines(
-            @Url String apiKey
+            @Query("sources") String sources,
+            @Query("apiKey") String apiKey
     );
-    @GET
+
+    @GET("everything")
     Call<News> getSearch(
-            @Url String apiKey
+            @Query("q") String query,
+            @Query("from") String fromDate,
+            @Query("to") String toDate,
+            @Query("sortBy") String sortBy,
+            @Query("apiKey") String apiKey
     );
+
 }
