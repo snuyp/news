@@ -1,7 +1,7 @@
 package com.example.dima.news.Interface;
 
-import com.example.dima.news.model.weather.CurrentWeather;
-import com.example.dima.news.model.weather.ForecastWeather;
+import com.example.dima.news.mvp.model.weather.CurrentWeather;
+import com.example.dima.news.mvp.model.weather.ForecastWeather;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

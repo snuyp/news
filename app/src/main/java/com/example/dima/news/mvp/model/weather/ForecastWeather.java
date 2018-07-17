@@ -1,4 +1,4 @@
-package com.example.dima.news.model.weather;
+package com.example.dima.news.mvp.model.weather;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

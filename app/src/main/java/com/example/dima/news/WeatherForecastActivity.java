@@ -19,8 +19,8 @@ import android.widget.ImageView;
 import com.example.dima.news.Interface.WeatherService;
 import com.example.dima.news.adapter.ListWeatherForecastAdapter;
 import com.example.dima.news.common.Common;
-import com.example.dima.news.model.weather.ForecastWeather;
-import com.example.dima.news.model.weather.List;
+import com.example.dima.news.mvp.model.weather.ForecastWeather;
+import com.example.dima.news.mvp.model.weather.List;
 import com.github.aakira.expandablelayout.ExpandableWeightLayout;
 
 import java.util.ArrayList;

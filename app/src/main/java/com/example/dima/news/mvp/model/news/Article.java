@@ -1,4 +1,4 @@
-package com.example.dima.news.model.news;
+package com.example.dima.news.mvp.model.news;
 
 /**
  * Created by Dima on 03.04.2018.

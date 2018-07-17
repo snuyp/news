@@ -9,11 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.dima.news.DetailArticle;
 import com.example.dima.news.Interface.ItemClickListener;
-import com.example.dima.news.ListNews;
 import com.example.dima.news.R;
 
-import com.example.dima.news.model.news.WebSite;
+import com.example.dima.news.mvp.model.news.SourceNews;
+
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,13 +49,13 @@ class ListSourceViewHolder extends RecyclerView.ViewHolder implements View.OnCli
 
 public class ListSourceAdapter extends RecyclerView.Adapter<ListSourceViewHolder> {
     private Context context;
-    private WebSite webSite;
+    private List<SourceNews> sources;
 
 
-    public ListSourceAdapter(Context context, WebSite webSite) {
+    public ListSourceAdapter(Context context, List<SourceNews> sources) {
         this.context = context;
-        this.webSite = webSite;
-
+        this.sources = sources;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -67,22 +69,19 @@ public class ListSourceAdapter extends RecyclerView.Adapter<ListSourceViewHolder
     @Override
     public void onBindViewHolder(@NonNull final ListSourceViewHolder holder, int position) {
 
-        holder.sourceTitle.setText(webSite.getSources().get(position).getName());
+        holder.sourceTitle.setText(sources.get(position).getName());
 
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
-                Intent intent = new Intent(context, ListNews.class);
-                intent.putExtra("source", webSite.getSources().get(position).getId());
+                Intent intent = new Intent(context, DetailArticle.ListNewsActivity.class);
+                intent.putExtra("source", sources.get(position).getId());
                 context.startActivity(intent);
             }
         });
-
-
     }
-
     @Override
     public int getItemCount() {
-        return webSite.getSources().size();
+        return sources.size();
     }
 }

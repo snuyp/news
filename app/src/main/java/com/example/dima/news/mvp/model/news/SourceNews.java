@@ -1,10 +1,4 @@
-package com.example.dima.news.model.news;
-
-import com.google.gson.annotations.SerializedName;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+package com.example.dima.news.mvp.model.news;
 
 /**
  * Created by Dima on 30.03.2018.

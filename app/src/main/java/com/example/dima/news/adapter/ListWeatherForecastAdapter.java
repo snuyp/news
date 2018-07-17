@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dima.news.R;
-import com.example.dima.news.model.weather.List;
+import com.example.dima.news.mvp.model.weather.List;
 import com.squareup.picasso.Picasso;
 
 /**

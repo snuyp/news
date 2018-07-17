@@ -14,7 +14,7 @@ import com.example.dima.news.DetailArticle;
 import com.example.dima.news.Interface.ItemClickListener;
 import com.example.dima.news.R;
 import com.example.dima.news.common.ISO8601Parse;
-import com.example.dima.news.model.news.Article;
+import com.example.dima.news.mvp.model.news.Article;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 import com.squareup.picasso.Picasso;
 

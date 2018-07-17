@@ -1,4 +1,4 @@
-package com.example.dima.news.model.news;
+package com.example.dima.news.mvp.model.news;
 
 import java.util.List;
 

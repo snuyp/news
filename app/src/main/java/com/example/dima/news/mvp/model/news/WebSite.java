@@ -1,6 +1,4 @@
-package com.example.dima.news.model.news;
-
-import com.example.dima.news.model.news.SourceNews;
+package com.example.dima.news.mvp.model.news;
 
 import java.util.HashMap;
 import java.util.List;

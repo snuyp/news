@@ -1,4 +1,4 @@
-package com.example.dima.news.model.weather;
+package com.example.dima.news.mvp.model.weather;
 
 /**
  * Created by Dima on 06.04.2018.

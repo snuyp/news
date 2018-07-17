@@ -3,50 +3,37 @@ package com.example.dima.news;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.dima.news.Interface.NewsService;
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.dima.news.Interface.WeatherService;
-import com.example.dima.news.adapter.ListNewsAdapter;
-import com.example.dima.news.adapter.ListSourceAdapter;
-import com.example.dima.news.common.Common;
-import com.example.dima.news.common.IntervalDays;
-import com.example.dima.news.model.news.News;
-import com.example.dima.news.model.news.WebSite;
-import com.example.dima.news.model.weather.CurrentWeather;
-import com.google.gson.Gson;
+import com.example.dima.news.adapter.NewsFragmentAdapter;
+import com.example.dima.news.mvp.model.weather.CurrentWeather;
+import com.example.dima.news.mvp.presenter.WeatherPresenter;
+import com.example.dima.news.mvp.view.WeatherView;
 import com.squareup.picasso.Picasso;
 
 import dmax.dialog.SpotsDialog;
 import io.paperdb.Paper;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MvpAppCompatActivity implements WeatherView {
+    @InjectPresenter
+    WeatherPresenter weatherPresenter;
 
-    private RecyclerView listWebsite;
-    private RecyclerView.LayoutManager layoutManager;
-
-    private NewsService newsService;
     private WeatherService weatherService;
 
-
-    private ListSourceAdapter adapter;
-    private ListNewsAdapter newsAdapter;
     private SpotsDialog dialog;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -54,33 +41,27 @@ public class MainActivity extends AppCompatActivity {
     private ImageView weatherImage;
     private LinearLayout weatherForecast;
 
+    private ViewPager mViewPager;
+    private TabLayout mTabLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         Paper.init(this);
+        final String city = PreferenceManager.getDefaultSharedPreferences(this).getString("city", "");
 
-        newsService = Common.getNewsService();
-        weatherService = Common.getWeatherService();
-
-        swipeRefreshLayout = findViewById(R.id.swipe_refresh);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadWebSite(true);
-            }
-        });
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
-        listWebsite = findViewById(R.id.list_source);
-        listWebsite.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        listWebsite.setLayoutManager(layoutManager);
-
-        dialog = new SpotsDialog(this);
+        mViewPager = findViewById(R.id.viewPager);
+        NewsFragmentAdapter adapter = new NewsFragmentAdapter(getSupportFragmentManager(),this);
+        mViewPager.setAdapter(adapter);
+        mTabLayout = findViewById(R.id.tabLayout);
+        mTabLayout.setupWithViewPager(mViewPager);
 
         //Weather
         cityTemp = findViewById(R.id.weather_name_t);
@@ -88,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
         sun = findViewById(R.id.weather_sunrise);
         pressure = findViewById(R.id.weather_pressure);
         weatherImage = findViewById(R.id.weather_image);
+
+        dialog = new SpotsDialog(this);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh);
 
         weatherForecast = findViewById(R.id.open_weather_forecast);
         weatherForecast.setOnClickListener(new View.OnClickListener() {
@@ -98,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        loadWebSite(false);
-        loadWeather();
+        //loadWebSite(false);
+        weatherPresenter.loadWeather(city);
     }
 
     @Override
@@ -112,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                loadSearchArticles(query);
+               // loadSearchArticles(query);
                 return true;
             }
 
@@ -149,130 +133,57 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void loadWeather() {
-        swipeRefreshLayout.setRefreshing(true);
+    @Override
+    public void weatherView(CurrentWeather currentWeather) {
+        String cityT = currentWeather.getName() + " " + currentWeather.getMain().getTemp().toString();
+        cityTemp.setText(cityT);
+        pressure.setText(
+                String.format("%s %s", getResources().getString(R.string.pressure),
+                        currentWeather.getMain().getPressure()));
+
+        windSpeedHumidity.setText(
+                String.format("%s %s\n%s %s", getResources().getString(R.string.wind_speed),
+                        currentWeather.getWind().getSpeed(), getResources().getString(R.string.humidity),
+                        currentWeather.getMain().getHumidity()));
+
+        sun.setText(String.format("%s%s", currentWeather.getSys().getSunrise(), currentWeather.getSys().getSunset()));
+
+        Picasso.with(getBaseContext())
+                .load(currentWeather.getWeather().get(0).getIcon())
+                .into(weatherImage);
+    }
+
+    @Override
+    public void error() {
+        Toast.makeText(this, R.string.openWeatherMap_not_working, Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void dialogShow() {
         dialog.show();
-        final String city = PreferenceManager.getDefaultSharedPreferences(this).getString("city", "");
-
-        weatherService.getToday(city, Common.units, Common.WEATHER_API_KEY).enqueue(new Callback<CurrentWeather>() {
-            @Override
-            public void onResponse(@NonNull Call<CurrentWeather> call, @NonNull Response<CurrentWeather> response) {
-                CurrentWeather currentWeather = null;
-                if (response.body() != null) {
-                    currentWeather = response.body();
-                    String cityT = currentWeather.getName() + " " + currentWeather.getMain().getTemp().toString();
-                    cityTemp.setText(cityT);
-                    pressure.setText(
-                            String.format("%s %s", getResources().getString(R.string.pressure),
-                                    currentWeather.getMain().getPressure()));
-
-                    windSpeedHumidity.setText(
-                            String.format("%s %s\n%s %s", getResources().getString(R.string.wind_speed),
-                                    currentWeather.getWind().getSpeed(), getResources().getString(R.string.humidity),
-                                    currentWeather.getMain().getHumidity()));
-
-                    sun.setText(String.format("%s%s", currentWeather.getSys().getSunrise(), currentWeather.getSys().getSunset()));
-
-                    Picasso.with(getBaseContext())
-                            .load(currentWeather.getWeather().get(0).getIcon())
-                            .into(weatherImage);
-
-                    dialog.dismiss();
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-                else
-                {
-                    cityTemp.setText(R.string.openWeatherMap_not_working);
-
-
-                }
-                dialog.dismiss();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(Call<CurrentWeather> call, Throwable t) {
-                Log.e("ERROR", t.getMessage());
-            }
-        });
-
     }
 
-    private void loadWebSite(boolean isRefreshed) {
-        String languageSource = PreferenceManager.
-                getDefaultSharedPreferences(this).getString("select_language", "");
-
-        if (!isRefreshed) {
-            String cache = Paper.book().read("cache");
-            if (cache != null && !cache.isEmpty() && !cache.equals("null")) {
-                WebSite webSite = new Gson().fromJson(cache, WebSite.class);
-                adapter = new ListSourceAdapter(getBaseContext(), webSite);
-                adapter.notifyDataSetChanged();
-                listWebsite.setAdapter(adapter);
-            } else {
-                dialog.show();
-
-                newsService.getSources(languageSource, Common.API_KEY).enqueue(new Callback<WebSite>() {
-                    @Override
-                    public void onResponse(@NonNull Call<WebSite> call, @NonNull Response<WebSite> response) {
-                        adapter = new ListSourceAdapter(getBaseContext(), response.body());
-                        adapter.notifyDataSetChanged();
-                        listWebsite.setAdapter(adapter);
-
-                        //Save to cache
-                        Paper.book().write("cache", new Gson().toJson(response.body()));
-                        dialog.dismiss();
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<WebSite> call, @NonNull Throwable t) {
-                        Log.e("Failure", "Failure" + t.getMessage());
-                    }
-                });
-
-            }
-        } else {
-            swipeRefreshLayout.setRefreshing(true);
-            loadWeather();
-            newsService.getSources(languageSource, Common.API_KEY).enqueue(new Callback<WebSite>() {
-                @Override
-                public void onResponse(@NonNull Call<WebSite> call, @NonNull Response<WebSite> response) {
-                    adapter = new ListSourceAdapter(getBaseContext(), response.body());
-                    adapter.notifyDataSetChanged();
-                    listWebsite.setAdapter(adapter);
-
-                    //Save to cache
-                    Paper.book().write("cache", new Gson().toJson(response.body()));
-
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<WebSite> call, @NonNull Throwable t) {
-                    Log.e("Failure", "Failure" + t.getMessage());
-                }
-            });
-
-        }
+    @Override
+    public void dialogDismiss() {
+        dialog.dismiss();
     }
 
-    public void loadSearchArticles(String search) {
-        int agoDay = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("search_articles", ""));
-        IntervalDays intervalDays = new IntervalDays(agoDay);
-        String today = intervalDays.getToday();
-        String daysAgo = intervalDays.getDaysAgo();
-        newsService.getSearch(search,daysAgo,today,"popularity",Common.API_KEY).enqueue(new Callback<News>() {
-            @Override
-            public void onResponse(Call<News> call, Response<News> response) {
-                newsAdapter = new ListNewsAdapter(response.body().getArticles(), getBaseContext());
-                newsAdapter.notifyDataSetChanged();
-                listWebsite.setAdapter(newsAdapter);
-            }
-
-            @Override
-            public void onFailure(Call<News> call, Throwable t) {
-
-            }
-        });
-    }
+//    public void loadSearchArticles(String search) {
+//        int agoDay = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("search_articles", ""));
+//        IntervalDays intervalDays = new IntervalDays(agoDay);
+//        String today = intervalDays.getToday();
+//        String daysAgo = intervalDays.getDaysAgo();
+//        newsService.getSearch(search,daysAgo,today,"popularity",Common.API_KEY).enqueue(new Callback<News>() {
+//            @Override
+//            public void onResponse(Call<News> call, Response<News> response) {
+//                newsAdapter = new ListNewsAdapter(response.body().getArticles(), getBaseContext());
+//                newsAdapter.notifyDataSetChanged();
+//                listWebsite.setAdapter(newsAdapter);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<News> call, Throwable t) {
+//
+//            }
+//        });
+//    }
 }
