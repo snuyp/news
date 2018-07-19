@@ -111,5 +111,12 @@
     <string name="weather_forecast_on_4_days">Weather Forecast</string>
     <string name="today">Today</string>
     <string name="sources">Sources</string>
+    <string name="technology">Technology</string>
+    <string name="sports">Sports</string>
+    <string name="science">Science</string>
+    <string name="health">Health</string>
+    <string name="general">General</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="business">business</string>
 
 </resources>

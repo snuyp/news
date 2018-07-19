@@ -1,4 +1,4 @@
-package com.example.dima.news;
+package com.example.dima.news.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.dima.news.Interface.WeatherService;
+import com.example.dima.news.R;
 import com.example.dima.news.adapter.NewsFragmentAdapter;
 import com.example.dima.news.mvp.model.weather.CurrentWeather;
 import com.example.dima.news.mvp.presenter.WeatherPresenter;
@@ -58,10 +59,13 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView {
         setSupportActionBar(myToolbar);
 
         mViewPager = findViewById(R.id.viewPager);
+
         NewsFragmentAdapter adapter = new NewsFragmentAdapter(getSupportFragmentManager(),this);
         mViewPager.setAdapter(adapter);
         mTabLayout = findViewById(R.id.tabLayout);
+        mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         mTabLayout.setupWithViewPager(mViewPager);
+
 
         //Weather
         cityTemp = findViewById(R.id.weather_name_t);

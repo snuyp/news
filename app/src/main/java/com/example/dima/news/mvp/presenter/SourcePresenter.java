@@ -24,9 +24,6 @@ import retrofit2.Response;
 public class SourcePresenter extends MvpPresenter<SourceView> {
     private NewsService newsService = Common.getNewsService();
 
-    //private Context context;
-
-
     public void loadSources(String languageSource, boolean isRefreshed) {
 
         if (!isRefreshed) {

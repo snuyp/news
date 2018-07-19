@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.dima.news.DetailArticle;
+import com.example.dima.news.ui.DetailArticle;
 import com.example.dima.news.Interface.ItemClickListener;
 import com.example.dima.news.R;
 import com.example.dima.news.common.ISO8601Parse;
@@ -63,6 +63,7 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder> {
     public ListNewsAdapter(List<Article> articleList, Context context) {
         this.articleList = articleList;
         this.context = context;
+        notifyDataSetChanged();
     }
 
     @NonNull

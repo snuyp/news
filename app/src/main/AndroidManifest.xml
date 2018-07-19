@@ -11,23 +11,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".DetailArticle$ListNewsActivity">
+        <activity android:name=".ui.ListNewsActivity">
         </activity>
-        <activity android:name=".DetailArticle">
+        <activity android:name=".ui.DetailArticle">
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings">
         </activity>
         <activity
-            android:name=".WeatherForecastActivity">
+            android:name=".ui.WeatherForecastActivity">
         </activity>
     </application>
 

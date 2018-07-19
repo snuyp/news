@@ -1,4 +1,4 @@
-package com.example.dima.news;
+package com.example.dima.news.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.dima.news.Interface.WeatherService;
+import com.example.dima.news.R;
 import com.example.dima.news.adapter.ListWeatherForecastAdapter;
 import com.example.dima.news.common.Common;
 import com.example.dima.news.mvp.model.weather.ForecastWeather;

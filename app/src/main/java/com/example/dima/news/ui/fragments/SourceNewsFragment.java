@@ -1,4 +1,4 @@
-package com.example.dima.news.fragments;
+package com.example.dima.news.ui.fragments;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;

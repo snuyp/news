@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.dima.news.DetailArticle;
 import com.example.dima.news.Interface.ItemClickListener;
+import com.example.dima.news.ui.ListNewsActivity;
 import com.example.dima.news.R;
 
 import com.example.dima.news.mvp.model.news.SourceNews;
@@ -74,7 +74,7 @@ public class ListSourceAdapter extends RecyclerView.Adapter<ListSourceViewHolder
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
-                Intent intent = new Intent(context, DetailArticle.ListNewsActivity.class);
+                Intent intent = new Intent(context, ListNewsActivity.class);
                 intent.putExtra("source", sources.get(position).getId());
                 context.startActivity(intent);
             }
