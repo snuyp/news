@@ -39,8 +39,10 @@ public class WeatherPresenter  extends MvpPresenter<WeatherView> {
             @Override
             public void onFailure(Call<CurrentWeather> call, Throwable t) {
                 Log.e("ERROR", t.getMessage());
+                getViewState().dialogDismiss();
             }
         });
+
 
     }
 }

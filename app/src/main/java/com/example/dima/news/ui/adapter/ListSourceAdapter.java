@@ -1,6 +1,5 @@
-package com.example.dima.news.adapter;
+package com.example.dima.news.ui.adapter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -48,12 +47,10 @@ class ListSourceViewHolder extends RecyclerView.ViewHolder implements View.OnCli
 
 
 public class ListSourceAdapter extends RecyclerView.Adapter<ListSourceViewHolder> {
-    private Context context;
     private List<SourceNews> sources;
 
 
-    public ListSourceAdapter(Context context, List<SourceNews> sources) {
-        this.context = context;
+    public ListSourceAdapter(List<SourceNews> sources) {
         this.sources = sources;
         notifyDataSetChanged();
     }
@@ -74,9 +71,9 @@ public class ListSourceAdapter extends RecyclerView.Adapter<ListSourceViewHolder
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
-                Intent intent = new Intent(context, ListNewsActivity.class);
+                Intent intent = new Intent(holder.itemView.getContext(), ListNewsActivity.class);
                 intent.putExtra("source", sources.get(position).getId());
-                context.startActivity(intent);
+                holder.itemView.getContext().startActivity(intent);
             }
         });
     }

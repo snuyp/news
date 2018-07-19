@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.dima.news.Interface.NewsService;
 import com.example.dima.news.R;
-import com.example.dima.news.adapter.ListNewsAdapter;
+import com.example.dima.news.ui.adapter.ListNewsAdapter;
 import com.example.dima.news.common.Common;
 import com.example.dima.news.mvp.model.news.Article;
 import com.example.dima.news.mvp.model.news.News;
@@ -107,7 +107,7 @@ public class ListNewsActivity extends AppCompatActivity {
 
                             List<Article> removeFirstArticle = response.body().getArticles();
                             removeFirstArticle.remove(0);
-                            adapter = new ListNewsAdapter(removeFirstArticle, getBaseContext());
+                            adapter = new ListNewsAdapter(removeFirstArticle);
                             adapter.notifyDataSetChanged();
                             lstNews.setAdapter(adapter);
                         }

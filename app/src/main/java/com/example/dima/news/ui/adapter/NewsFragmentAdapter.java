@@ -1,4 +1,4 @@
-package com.example.dima.news.adapter;
+package com.example.dima.news.ui.adapter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -14,7 +14,6 @@ import com.example.dima.news.ui.fragments.HealthNewsFragment;
 import com.example.dima.news.ui.fragments.ScienceNewsFragment;
 import com.example.dima.news.ui.fragments.SourceNewsFragment;
 import com.example.dima.news.ui.fragments.SportsNewsFragment;
-import com.example.dima.news.ui.fragments.TechnologyNewsFragment;
 
 public class NewsFragmentAdapter extends FragmentPagerAdapter {
     private Context context;
@@ -30,27 +29,24 @@ public class NewsFragmentAdapter extends FragmentPagerAdapter {
             case 0:
                 return SourceNewsFragment.getInstance();
             case 1:
-                return TechnologyNewsFragment.getInstance();
+                return ScienceNewsFragment.getInstance();
             case 2:
                 return SportsNewsFragment.getInstance();
             case 3:
-                return ScienceNewsFragment.getInstance();
-            case 4:
                 return HealthNewsFragment.getInstance();
-            case 5:
+            case 4:
                 return GeneralNewsFragment.getInstance();
-            case 6:
+            case 5:
                 return EntertainmentNewsFragment.getInstance();
-            case 7:
+            case 6:
                 return BusinessNewsFragment.getInstance();
-
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 8;
+        return 7;
     }
 
     @Nullable
@@ -60,18 +56,16 @@ public class NewsFragmentAdapter extends FragmentPagerAdapter {
             case 0:
                 return context.getString(R.string.sources);
             case 1:
-                return context.getString(R.string.technology);
+                return context.getString(R.string.science);
             case 2:
                 return context.getString(R.string.sports);
             case 3:
-                return context.getString(R.string.science);
-            case 4:
                 return context.getString(R.string.health);
-            case 5:
+            case 4:
                 return context.getString(R.string.general);
-            case 6:
+            case 5:
                 return context.getString(R.string.entertainment);
-            case 7:
+            case 6:
                 return context.getString(R.string.business);
         }
         return "";

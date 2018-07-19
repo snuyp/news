@@ -20,7 +20,7 @@ import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.dima.news.Interface.WeatherService;
 import com.example.dima.news.R;
-import com.example.dima.news.adapter.NewsFragmentAdapter;
+import com.example.dima.news.ui.adapter.NewsFragmentAdapter;
 import com.example.dima.news.mvp.model.weather.CurrentWeather;
 import com.example.dima.news.mvp.presenter.WeatherPresenter;
 import com.example.dima.news.mvp.view.WeatherView;

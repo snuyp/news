@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.dima.news.R;
-import com.example.dima.news.adapter.ListSourceAdapter;
+import com.example.dima.news.ui.adapter.ListSourceAdapter;
 import com.example.dima.news.mvp.model.news.SourceNews;
 import com.example.dima.news.mvp.presenter.SourcePresenter;
 import com.example.dima.news.mvp.view.SourceView;
@@ -93,7 +93,7 @@ public class SourceNewsFragment extends MvpAppCompatFragment implements SourceVi
 
     @Override
     public void onLoadResult(List<SourceNews> sources) {
-        adapter = new ListSourceAdapter(getContext(), sources);
+        adapter = new ListSourceAdapter(sources);
         listWebsite.setAdapter(adapter);
     }
 }

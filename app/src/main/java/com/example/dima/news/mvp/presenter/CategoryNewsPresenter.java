@@ -55,6 +55,7 @@ public class CategoryNewsPresenter extends MvpPresenter<CategoryNewsView> {
             @Override
             public void onFailure(Call<News> call, Throwable t) {
                 Log.e("Failure", "Failure" + t.getMessage());
+                getViewState().setRefresh(false);
             }
         });
     }

@@ -11,10 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
-import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.dima.news.R;
-import com.example.dima.news.adapter.ListNewsAdapter;
+import com.example.dima.news.ui.adapter.ListNewsAdapter;
 import com.example.dima.news.mvp.model.news.Article;
 import com.example.dima.news.mvp.presenter.CategoryNewsPresenter;
 import com.example.dima.news.mvp.view.CategoryNewsView;
@@ -75,7 +74,7 @@ public class GeneralNewsFragment extends MvpAppCompatFragment implements Categor
 
     @Override
     public void onLoadResult(List<Article> articles) {
-        adapter = new ListNewsAdapter(articles,getContext());
+        adapter = new ListNewsAdapter(articles);
         lstNews.setAdapter(adapter);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.dima.news.adapter;
+package com.example.dima.news.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -51,7 +51,6 @@ class ListNewsViewHolder extends RecyclerView.ViewHolder implements View.OnClick
         try {
             itemClickListener.onClick(v, getAdapterPosition(), false);
         } catch (NullPointerException e) {
-
         }
     }
 }
@@ -60,9 +59,8 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder> {
     private List<Article> articleList;
     private Context context;
 
-    public ListNewsAdapter(List<Article> articleList, Context context) {
+    public ListNewsAdapter(List<Article> articleList) {
         this.articleList = articleList;
-        this.context = context;
         notifyDataSetChanged();
     }
 
@@ -78,44 +76,34 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder> {
     public void onBindViewHolder(@NonNull final ListNewsViewHolder holder, int position) {
 
         try {
-            if (articleList.get(position).getUrlToImage().isEmpty()) {
-                Picasso.with(context)
-                        .load(R.drawable.ic_terrain_black_24dp)
-                        .into(holder.articleImage);
-            } else {
-                Picasso.with(context)
-                        .load(articleList.get(position).getUrlToImage())
-                        .error(R.drawable.ic_terrain_black_24dp)
-                        .into(holder.articleImage);
-            }
+            Picasso.with(holder.itemView.getContext())
+                    .load(articleList.get(position).getUrlToImage())
+                    .placeholder(R.drawable.news)
+                    .into(holder.articleImage);
 
             if (articleList.get(position).getTitle().length() > 65) {
                 holder.articleTitle.setText(articleList.get(position).getTitle().substring(0, 65) + "...");
             } else {
                 holder.articleTitle.setText(articleList.get(position).getTitle());
             }
-            Date date = null;
-            try {
-                date = ISO8601Parse.parse(articleList.get(position).getPublishedAt());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            Date date = ISO8601Parse.parse(articleList.get(position).getPublishedAt());
             if (date != null) {
                 holder.articleTime.setReferenceTime(date.getTime());
             }
-
             holder.setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onClick(View view, int position, boolean isLongClick) {
-                    Intent intent = new Intent(context, DetailArticle.class);
+                    Intent intent = new Intent(holder.itemView.getContext(), DetailArticle.class);
                     intent.putExtra("webURL", articleList.get(position).getUrl());
-                    context.startActivity(intent);
+                    holder.itemView.getContext().startActivity(intent);
                 }
             });
+
         } catch (NullPointerException e) {
             Log.e("ERROR", e.getMessage());
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-
     }
 
     @Override
