@@ -77,4 +77,14 @@ public class HealthNewsFragment extends MvpAppCompatFragment implements Category
         adapter = new ListNewsAdapter(articles);
         lstNews.setAdapter(adapter);
     }
+
+    @Override
+    public void dialogShow() {
+
+    }
+
+    @Override
+    public void dialogDismiss() {
+
+    }
 }

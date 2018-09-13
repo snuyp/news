@@ -9,7 +9,9 @@ import com.example.dima.news.common.Common;
 import com.example.dima.news.mvp.model.news.Article;
 import com.example.dima.news.mvp.model.news.News;
 import com.example.dima.news.mvp.view.CategoryNewsView;
+import com.example.dima.news.ui.adapter.ListNewsAdapter;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -58,5 +60,37 @@ public class CategoryNewsPresenter extends MvpPresenter<CategoryNewsView> {
                 getViewState().setRefresh(false);
             }
         });
+    }
+
+    public void loadNewsOfSource(String source, boolean isRefreshed) {
+        if (!isRefreshed) {
+            getViewState().dialogShow();
+            newsService.getHeadlines(source, Common.API_KEY)
+                    .enqueue(new Callback<News>() {
+                        @Override
+                        public void onResponse(Call<News> call, Response<News> response) {
+                            if (response.body() != null) {
+                                List<Article> removeFirstArticle = response.body().getArticles();
+                                removeFirstArticle.remove(0);
+                                getViewState().onLoadResult(removeFirstArticle);
+                                getViewState().dialogDismiss();
+                            } else {
+                                //todo
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<News> call, Throwable t) {
+
+                        }
+                    });
+        }
+        else
+        {
+
+
+        }
+        getViewState().setRefresh(false);
+
     }
 }

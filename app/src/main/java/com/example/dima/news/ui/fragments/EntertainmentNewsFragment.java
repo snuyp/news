@@ -77,4 +77,14 @@ public class EntertainmentNewsFragment  extends MvpAppCompatFragment implements 
         adapter = new ListNewsAdapter(articles);
         lstNews.setAdapter(adapter);
     }
+
+    @Override
+    public void dialogShow() {
+
+    }
+
+    @Override
+    public void dialogDismiss() {
+
+    }
 }

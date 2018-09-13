@@ -30,7 +30,6 @@ public class SportsNewsFragment extends MvpAppCompatFragment implements Category
     SwipeRefreshLayout swipeRefreshLayout;
 
     private RecyclerView lstNews;
-    private RecyclerView.LayoutManager layoutManager;
     private ListNewsAdapter adapter;
 
     private final String country = "ru"; //todo: edit later
@@ -55,7 +54,7 @@ public class SportsNewsFragment extends MvpAppCompatFragment implements Category
 
         lstNews = v.findViewById(R.id.lst_news);
         lstNews.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         lstNews.setLayoutManager(layoutManager);
 
         swipeRefreshLayout = v.findViewById(R.id.swipe_refresh_news);
@@ -78,5 +77,15 @@ public class SportsNewsFragment extends MvpAppCompatFragment implements Category
     public void onLoadResult(List<Article> articles) {
         adapter = new ListNewsAdapter(articles);
         lstNews.setAdapter(adapter);
+    }
+
+    @Override
+    public void dialogShow() {
+
+    }
+
+    @Override
+    public void dialogDismiss() {
+
     }
 }

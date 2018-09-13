@@ -77,4 +77,14 @@ public class BusinessNewsFragment extends MvpAppCompatFragment implements Catego
         adapter = new ListNewsAdapter(articles);
         lstNews.setAdapter(adapter);
     }
+
+    @Override
+    public void dialogShow() {
+
+    }
+
+    @Override
+    public void dialogDismiss() {
+
+    }
 }

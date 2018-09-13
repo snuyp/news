@@ -33,8 +33,12 @@ public class Main {
     public Main() {
     }
 
-    public String getTemp() {
+    public String getStringTemp() {
         return String.valueOf(temp.intValue()) + "\u00B0";
+    }
+
+    public Double getTemp() {
+        return temp;
     }
 
     public void setTemp(Double temp) {

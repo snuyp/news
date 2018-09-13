@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dima.news.R;
-import com.example.dima.news.mvp.model.weather.List;
+import com.example.dima.news.mvp.model.weather.ForecastList;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -35,9 +35,9 @@ class ListWeatherForecastViewHolder extends RecyclerView.ViewHolder {
 
 public class ListWeatherForecastAdapter extends RecyclerView.Adapter<ListWeatherForecastViewHolder> {
     private Context context;
-    private java.util.List<List> weatherForecastList;
+    private java.util.List<ForecastList> weatherForecastList;
 
-    public ListWeatherForecastAdapter(Context context, java.util.List<List> weatherForecastList) {
+    public ListWeatherForecastAdapter(Context context, java.util.List<ForecastList> weatherForecastList) {
         this.context = context;
         this.weatherForecastList = weatherForecastList;
     }
@@ -53,7 +53,7 @@ public class ListWeatherForecastAdapter extends RecyclerView.Adapter<ListWeather
 
     @Override
     public void onBindViewHolder(@NonNull ListWeatherForecastViewHolder holder, int position) {
-        holder.t.setText(weatherForecastList.get(position).getMain().getTemp());
+        holder.t.setText(weatherForecastList.get(position).getMain().getStringTemp());
 
         holder.windSpeed.setText(
                 String.format("%s %s", context.getResources().getString(R.string.wind_speed),

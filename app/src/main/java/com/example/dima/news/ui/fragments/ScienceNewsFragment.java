@@ -79,4 +79,14 @@ public class ScienceNewsFragment extends MvpAppCompatFragment implements Categor
         adapter = new ListNewsAdapter(articles);
         lstNews.setAdapter(adapter);
     }
+
+    @Override
+    public void dialogShow() {
+
+    }
+
+    @Override
+    public void dialogDismiss() {
+
+    }
 }

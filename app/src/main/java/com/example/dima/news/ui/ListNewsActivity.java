@@ -10,8 +10,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.dima.news.Interface.NewsService;
 import com.example.dima.news.R;
+import com.example.dima.news.mvp.model.news.SourceNews;
+import com.example.dima.news.mvp.presenter.CategoryNewsPresenter;
+import com.example.dima.news.mvp.presenter.SourcePresenter;
+import com.example.dima.news.mvp.view.CategoryNewsView;
+import com.example.dima.news.mvp.view.SourceView;
 import com.example.dima.news.ui.adapter.ListNewsAdapter;
 import com.example.dima.news.common.Common;
 import com.example.dima.news.mvp.model.news.Article;
@@ -27,8 +35,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ListNewsActivity extends AppCompatActivity {
-
+public class ListNewsActivity extends MvpAppCompatActivity implements CategoryNewsView{
+    @InjectPresenter
+    CategoryNewsPresenter categoryNewsPresenter;
 
     private AlertDialog dialog;
     private TextView topAuthor;
@@ -40,7 +49,6 @@ public class ListNewsActivity extends AppCompatActivity {
 
     private ListNewsAdapter adapter;
     private RecyclerView lstNews;
-    private NewsService service;
     private RecyclerView.LayoutManager layoutManager;
 
     private String source = "";
@@ -51,15 +59,13 @@ public class ListNewsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_news);
 
-        service = Common.getNewsService();
-
         dialog = new SpotsDialog(this);
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_news);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadNews(source, true);
+                categoryNewsPresenter.loadNewsOfSource(source, true);
             }
         });
 
@@ -67,7 +73,7 @@ public class ListNewsActivity extends AppCompatActivity {
         diagonalLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), ListNewsActivity.class);
+                Intent intent = new Intent(getBaseContext(), DetailArticle.class);
                 intent.putExtra("webURL", webHotURL);
                 startActivity(intent);
             }
@@ -85,55 +91,37 @@ public class ListNewsActivity extends AppCompatActivity {
         if (getIntent() != null) {
             source = getIntent().getStringExtra("source");
             if (!source.isEmpty()) {
-                loadNews(source, false);
+                categoryNewsPresenter.loadNewsOfSource(source, false);
             }
         }
     }
 
-    private void loadNews(String source, boolean isRefreshed) {
-        if (!isRefreshed) {
-            dialog.show();
-            service.getHeadlines(source, Common.API_KEY)
-                    .enqueue(new Callback<News>() {
-                        @Override
-                        public void onResponse(Call<News> call, Response<News> response) {
-                            dialog.dismiss();
-                            Picasso.with(getBaseContext())
-                                    .load(response.body().getArticles().get(0).getUrlToImage())
-                                    .into(kenBurnsView);
-                            topTitle.setText(response.body().getArticles().get(0).getTitle());
-                            topAuthor.setText(response.body().getArticles().get(0).getAuthor());
-                            webHotURL = response.body().getArticles().get(0).getUrl();
-
-                            List<Article> removeFirstArticle = response.body().getArticles();
-                            removeFirstArticle.remove(0);
-                            adapter = new ListNewsAdapter(removeFirstArticle);
-                            adapter.notifyDataSetChanged();
-                            lstNews.setAdapter(adapter);
-                        }
-
-                        @Override
-                        public void onFailure(Call<News> call, Throwable t) {
-
-                        }
-                    });
-        }
-        //        else{
-        //            dialog.show();
-        //            service.getHeadlines(Common.getApiUrl(source))
-        //                    .enqueue(new Callback<News>() {
-        //                        @Override
-        //                        public void onResponse(Call<News> call, Response<News> response) {
-        //
-        //                        }
-        //
-        //                        @Override
-        //                        public void onFailure(Call<News> call, Throwable t) {
-        //
-        //                        }
-        //                    });
-        //
-        //        }
-        swipeRefreshLayout.setRefreshing(false);
+    @Override
+    public void setRefresh(boolean isRefreshing) {
+        swipeRefreshLayout.setRefreshing(isRefreshing);
     }
+
+    @Override
+    public void onLoadResult(List<Article> articles) {
+        adapter = new ListNewsAdapter(articles);
+        lstNews.setAdapter(adapter);
+
+        Picasso.with(getBaseContext())
+                .load(articles.get(0).getUrlToImage())
+                .into(kenBurnsView);
+        topTitle.setText(articles.get(0).getTitle());
+        topAuthor.setText(articles.get(0).getAuthor());
+        webHotURL = articles.get(0).getUrl();
+    }
+
+    @Override
+    public void dialogShow() {
+        dialog.show();
+    }
+
+    @Override
+    public void dialogDismiss() {
+        dialog.dismiss();
+    }
+
 }

@@ -9,11 +9,10 @@
         android:icon="@drawable/ic_search_black_24dp"
         android:title="@string/search"
         app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="android.support.v7.widget.SearchView"/>
-
-    <item
-        android:id="@+id/action_settings"
-        app:showAsAction="never"
-        android:title="@string/action_settings"/>
+        app:actionViewClass="android.support.v7.widget.SearchView">
+        <item
+            android:id="@+id/action_settings"
+            android:title="@string/action_settings"/>
+    </item>
 
 </menu>

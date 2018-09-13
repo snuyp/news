@@ -101,8 +101,8 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder> {
 
         } catch (NullPointerException e) {
             Log.e("ERROR", e.getMessage());
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } catch (ParseException | IllegalArgumentException e) {
+            Log.e("ParseException", e.getMessage());
         }
     }
 

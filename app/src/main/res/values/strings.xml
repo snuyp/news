@@ -57,7 +57,16 @@
         <item>es</item>
         <item>ar</item>
     </string-array>
-
+    <string-array name="days">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wen</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
+    
     <!-- Example settings RatesData & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
 
@@ -110,6 +119,7 @@
     <string name="find_sources_that_display_news_in_a_specific_language">Find sources that display news in a specific language</string>
     <string name="weather_forecast_on_4_days">Weather Forecast</string>
     <string name="today">Today</string>
+
     <string name="sources">Sources</string>
     <string name="technology">Technology</string>
     <string name="sports">Sports</string>
@@ -118,5 +128,6 @@
     <string name="general">General</string>
     <string name="entertainment">Entertainment</string>
     <string name="business">business</string>
+
 
 </resources>

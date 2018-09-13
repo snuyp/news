@@ -2,6 +2,8 @@ package com.example.dima.news.mvp.model.weather;
 
 import android.util.Log;
 
+import android.util.Log;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,12 +11,13 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Dima on 27.04.2018.
  */
 
-public class List {
+public class ForecastList {
     @SerializedName("dt")
     @Expose
     private Integer dt;
@@ -40,7 +43,7 @@ public class List {
     @Expose
     private String dtTxt;
 
-    public List() {
+    public ForecastList() {
     }
 
     public Integer getDt() {
@@ -104,7 +107,7 @@ public class List {
     }
     public String getDayOfWeek()  {
         String[] date = getDtTxt().split(" ");
-        SimpleDateFormat format1=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format1=new SimpleDateFormat("yyyy-MM-dd",new Locale("en","US"));
         Date dt1= null;
         try {
             dt1 = format1.parse(date[0]);
@@ -112,9 +115,8 @@ public class List {
             e.printStackTrace();
             Log.e("ERROR",e.getMessage());
         }
-        DateFormat format2=new SimpleDateFormat("EEEE");
-        String finalDay=format2.format(dt1);
-        return finalDay;
+        DateFormat format2=new SimpleDateFormat("EEEE",new Locale("en","US"));
+        return format2.format(dt1);
     }
 
     public void setDtTxt(String dtTxt) {

@@ -59,7 +59,6 @@ public class SourcePresenter extends MvpPresenter<SourceView> {
         } else {
             getViewState().setRefresh(true);
 
-            //loadWeather();
             newsService.getSources(languageSource, Common.API_KEY).enqueue(new Callback<WebSite>() {
                 @Override
                 public void onResponse(@NonNull Call<WebSite> call, @NonNull Response<WebSite> response) {
