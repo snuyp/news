@@ -37,32 +37,32 @@ public class WeatherForecastPresenter extends MvpPresenter<WeatherForecastView> 
     private ForecastWeather forecastWeather;
     private LineChartData lineData;
     private LinkedHashMap<String, List<ForecastList>> mapForecastOnTheDays;
-   // public final static String[] days = new String[]{"Mon", "Tue", "Wen", "Thu", "Fri", "Sat", "Sun",};
     public String[] time = new String[]{"03:00", "06:00", "09:00", "12:00", "15:00", "18:00","21:00","24:00"};
 
 
     public void getWeatherForecast(String city) {
-        getViewState().dialogShow();
-        weatherService.getForecast(city, Common.units, Common.WEATHER_API_KEY).enqueue(new Callback<ForecastWeather>() {
-            @Override
-            public void onResponse(@NonNull Call<ForecastWeather> call, @NonNull Response<ForecastWeather> response) {
-                if (response.body() != null) {
-                    forecastWeather = response.body();
-                    mapForecastOnTheDays = forecastWeather.forecastOnTheDays();
-                    generateColumnData();
-
-                     getViewState().dialogDismiss();
-                } else {
-                    getViewState().error("No data");
+        if(forecastWeather == null) {
+            getViewState().dialogShow();
+            weatherService.getForecast(city, Common.units, Common.WEATHER_API_KEY).enqueue(new Callback<ForecastWeather>() {
+                @Override
+                public void onResponse(@NonNull Call<ForecastWeather> call, @NonNull Response<ForecastWeather> response) {
+                    if (response.body() != null) {
+                        forecastWeather = response.body();
+                        mapForecastOnTheDays = forecastWeather.forecastOnTheDays();
+                        generateColumnData();
+                        getViewState().dialogDismiss();
+                    } else {
+                        getViewState().error("No data");
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ForecastWeather> call, Throwable t) {
-                Log.e("Error", t.getMessage());
-                getViewState().error(t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<ForecastWeather> call, Throwable t) {
+                    Log.e("Error", t.getMessage());
+                    getViewState().error(t.getMessage());
+                }
+            });
+        }
     }
 
     private void generateColumnData() {
@@ -92,7 +92,7 @@ public class WeatherForecastPresenter extends MvpPresenter<WeatherForecastView> 
 
         columnData.setAxisXBottom(new Axis(axisValues).setHasLines(true));
         columnData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(2));
-        getViewState().weatherView(columnData);
+        getViewState().chartBottomView(columnData);
 
         generateInitialLineData(time);
     }
@@ -118,9 +118,6 @@ public class WeatherForecastPresenter extends MvpPresenter<WeatherForecastView> 
         lineData.setAxisXBottom(new Axis(axisValues).setHasLines(true).setName("Hours"));
         lineData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3));
 
-
-       // float top = Collections.max(forecastWeather.tempOfDays(0)) +15;
-        //float bottom = Collections.min(forecastWeather.tempOfDays(0)) -15;
         Viewport viewPort = new Viewport(0,30,7,-30);
         getViewState().chartTop(lineData,viewPort);
     }
@@ -133,6 +130,7 @@ public class WeatherForecastPresenter extends MvpPresenter<WeatherForecastView> 
         line.setColor(color);
         line.setHasLabels(true);
 
+        getViewState().onLoadResult(forecastWeather.forecastOnTheDays(columnIndex));
         List<Float> tempOfDays = forecastWeather.tempOfDays(columnIndex);
         int i = 0;
         int difference = line.getValues().size() - tempOfDays.size();

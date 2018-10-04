@@ -1,11 +1,14 @@
 package com.example.dima.news.mvp.presenter;
 
+import android.content.Context;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.example.dima.news.Interface.NewsService;
 import com.example.dima.news.common.Common;
+import com.example.dima.news.common.IntervalDays;
 import com.example.dima.news.mvp.model.news.Article;
 import com.example.dima.news.mvp.model.news.News;
 import com.example.dima.news.mvp.view.CategoryNewsView;
@@ -92,5 +95,26 @@ public class CategoryNewsPresenter extends MvpPresenter<CategoryNewsView> {
         }
         getViewState().setRefresh(false);
 
+    }
+    public void loadSearchArticles(Context context, String search) {
+        int agoDay = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("search_articles", ""));
+        IntervalDays intervalDays = new IntervalDays(agoDay);
+        String today = intervalDays.getToday();
+        String daysAgo = intervalDays.getDaysAgo();
+        newsService.getSearch(search, daysAgo, today, "popularity", Common.API_KEY).enqueue(new Callback<News>() {
+            @Override
+            public void onResponse(Call<News> call, Response<News> response) {
+                getViewState().onLoadResult(response.body().getArticles());
+                
+//                newsAdapter = new ListNewsAdapter(response.body().getArticles(), getBaseContext());
+//                newsAdapter.notifyDataSetChanged();
+//                listWebsite.setAdapter(newsAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<News> call, Throwable t) {
+
+            }
+        });
     }
 }

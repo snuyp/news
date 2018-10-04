@@ -1,20 +1,30 @@
 package com.example.dima.news.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.dima.news.R;
 import com.example.dima.news.mvp.model.weather.ForecastList;
+import com.example.dima.news.mvp.model.weather.ForecastWeather;
 import com.example.dima.news.mvp.presenter.WeatherForecastPresenter;
 import com.example.dima.news.mvp.view.WeatherForecastView;
+import com.example.dima.news.ui.adapter.ListNewsAdapter;
 import com.example.dima.news.ui.adapter.ListWeatherForecastAdapter;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
+import java.util.List;
 
 import dmax.dialog.SpotsDialog;
 import es.dmoral.toasty.Toasty;
@@ -25,6 +35,7 @@ import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.util.ChartUtils;
+import lecho.lib.hellocharts.view.Chart;
 import lecho.lib.hellocharts.view.ColumnChartView;
 import lecho.lib.hellocharts.view.LineChartView;
 
@@ -43,24 +54,27 @@ public class WeatherForecastActivity extends MvpAppCompatActivity implements Wea
     private LineChartView chartTop;
     private ColumnChartView chartBottom;
     private SpotsDialog dialog;
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weather_forecast);
         String city = PreferenceManager.getDefaultSharedPreferences(this).getString("city", "");
 
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        toolbar.setTitle(R.string.weather_forecast);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.weather_forecast);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        recyclerView = findViewById(R.id.weather_recyclerView);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        recyclerView.setLayoutManager(layoutManager);
+
+
         chartTop = findViewById(R.id.chart_top);
         weatherForecastPresenter.getWeatherForecast(city);
-        //weatherForecastPresenter.generateInitialLineData(getResources().getStringArray(R.array.days));
         chartBottom = findViewById(R.id.chart_bottom);
-        //weatherForecastPresenter.generateColumnData(getResources().getStringArray(R.array.days),city);
         dialog = new SpotsDialog(this);
     }
 
@@ -77,15 +91,11 @@ public class WeatherForecastActivity extends MvpAppCompatActivity implements Wea
         super.supportNavigateUpTo(upIntent);
     }
 
-    public void weatherView(java.util.List<ForecastList> forecastList) {
-        adapter = new ListWeatherForecastAdapter(getBaseContext(), forecastList);
-        adapter.notifyDataSetChanged();
-        recyclerView.setAdapter(adapter);
-    }
 
     @Override
-    public void weatherView(ColumnChartData columnData) {
+    public void chartBottomView(ColumnChartData columnData) {
         chartBottom.setColumnChartData(columnData);
+
         // Set value touch listener that will trigger changes for chartTop.
         chartBottom.setOnValueTouchListener(new ColumnChartOnValueSelectListener() {
             @Override
@@ -98,7 +108,6 @@ public class WeatherForecastActivity extends MvpAppCompatActivity implements Wea
                 weatherForecastPresenter.generateLineData(0, ChartUtils.COLOR_GREEN, 100);
             }
         });
-
 
         // Set selection mode to keep selected month column highlighted.
         chartBottom.setValueSelectionEnabled(true);
@@ -120,7 +129,6 @@ public class WeatherForecastActivity extends MvpAppCompatActivity implements Wea
         chartTop.setCurrentViewport(v);
 
         chartTop.setZoomType(ZoomType.HORIZONTAL);
-
     }
 
     @Override
@@ -132,6 +140,14 @@ public class WeatherForecastActivity extends MvpAppCompatActivity implements Wea
     public void chartStartDataAnimation(int duration) {
         chartTop.startDataAnimation(duration);
     }
+
+    @Override
+    public void onLoadResult(List<ForecastList> forecast) {
+        adapter = new ListWeatherForecastAdapter(forecast);
+        recyclerView.setAdapter(adapter);
+        getSupportActionBar().setSubtitle(forecast.get(0).getDayOfWeek());
+    }
+
 
     @Override
     public void error(String error) {
@@ -147,6 +163,4 @@ public class WeatherForecastActivity extends MvpAppCompatActivity implements Wea
     public void dialogDismiss() {
         dialog.dismiss();
     }
-
-
 }

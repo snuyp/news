@@ -68,7 +68,7 @@ public class ISO8601Parse {
 
     //      YYYY = four-digit year
     //      MM   = two-digit month (01=January, etc.)
-    //      DD   = two-digit day of month (01 through 31)
+    //      DD   = two-digit dayView of month (01 through 31)
     //      hh   = two digits of hour (00 through 23) (am/pm NOT allowed)
     //      mm   = two digits of minute (00 through 59)
     //      ss   = two digits of second (00 through 59)

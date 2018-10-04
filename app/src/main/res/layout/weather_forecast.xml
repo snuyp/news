@@ -1,32 +1,73 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp">
+    android:orientation="vertical">
 
-    <lecho.lib.hellocharts.view.LineChartView
-        android:id="@+id/chart_top"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-    </lecho.lib.hellocharts.view.LineChartView>
+        android:layout_height="?attr/actionBarSize"
+        app:layout_collapseMode="pin"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:showAsAction="ifRoom"/>
 
-    <View
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/darker_gray"/>
+        android:layout_height="match_parent">
 
-    <lecho.lib.hellocharts.view.ColumnChartView
-        android:id="@+id/chart_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-    </lecho.lib.hellocharts.view.ColumnChartView>
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="16dp"
+            android:weightSum="5">
 
+            <lecho.lib.hellocharts.view.ColumnChartView
+                android:id="@+id/chart_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="2">
+            </lecho.lib.hellocharts.view.ColumnChartView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/darker_gray"/>
+
+            <lecho.lib.hellocharts.view.LineChartView
+                android:id="@+id/chart_top"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_weight="3">
+            </lecho.lib.hellocharts.view.LineChartView>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/darker_gray"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/weather_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/diagonal_layout"
+                android:background="@color/colorPrimary"
+                app:layout_constraintTop_toBottomOf="@+id/layout"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
+
+
+

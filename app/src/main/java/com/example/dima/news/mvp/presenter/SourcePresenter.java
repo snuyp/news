@@ -79,23 +79,4 @@ public class SourcePresenter extends MvpPresenter<SourceView> {
         }
     }
 
-    public void loadSearchArticles(Context context, String search) {
-        int agoDay = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("search_articles", ""));
-        IntervalDays intervalDays = new IntervalDays(agoDay);
-        String today = intervalDays.getToday();
-        String daysAgo = intervalDays.getDaysAgo();
-        newsService.getSearch(search, daysAgo, today, "popularity", Common.API_KEY).enqueue(new Callback<News>() {
-            @Override
-            public void onResponse(Call<News> call, Response<News> response) {
-//                newsAdapter = new ListNewsAdapter(response.body().getArticles(), getBaseContext());
-//                newsAdapter.notifyDataSetChanged();
-//                listWebsite.setAdapter(newsAdapter);
-            }
-
-            @Override
-            public void onFailure(Call<News> call, Throwable t) {
-
-            }
-        });
-    }
 }

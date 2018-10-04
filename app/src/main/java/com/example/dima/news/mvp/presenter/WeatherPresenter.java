@@ -16,7 +16,7 @@ import retrofit2.Response;
 
 @InjectViewState
 public class WeatherPresenter  extends MvpPresenter<WeatherView> {
-    WeatherService weatherService = Common.getWeatherService();
+    private WeatherService weatherService = Common.getWeatherService();
     public void loadWeather(String city) {
         getViewState().dialogShow();
 
