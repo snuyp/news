@@ -11,6 +11,7 @@ import java.util.List;
 public interface CategoryNewsView extends MvpView{
     void setRefresh(boolean isRefreshing);
     void onLoadResult(List<Article> articles);
+    void error(String error);
     void dialogShow();
     void dialogDismiss();
 }

@@ -52,7 +52,7 @@ public class WeatherForecastPresenter extends MvpPresenter<WeatherForecastView> 
                         generateColumnData();
                         getViewState().dialogDismiss();
                     } else {
-                        getViewState().error("No data");
+                        getViewState().error("Failure");
                     }
                 }
 

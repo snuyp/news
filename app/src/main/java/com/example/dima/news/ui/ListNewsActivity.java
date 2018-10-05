@@ -115,6 +115,11 @@ public class ListNewsActivity extends MvpAppCompatActivity implements CategoryNe
     }
 
     @Override
+    public void error(String error) {
+
+    }
+
+    @Override
     public void dialogShow() {
         dialog.show();
     }

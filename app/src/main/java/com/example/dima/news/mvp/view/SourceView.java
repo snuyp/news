@@ -10,6 +10,7 @@ import java.util.List;
 @StateStrategyType(AddToEndSingleStrategy.class)
 public interface SourceView extends MvpView {
     void setRefresh(boolean isRefreshing);
+    void error(String error);
     void dialogShow();
     void dialogDismiss();
     void onLoadResult(List<SourceNews> sources);

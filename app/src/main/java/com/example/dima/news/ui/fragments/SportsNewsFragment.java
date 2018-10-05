@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -19,6 +20,8 @@ import com.example.dima.news.mvp.presenter.CategoryNewsPresenter;
 import com.example.dima.news.mvp.view.CategoryNewsView;
 
 import java.util.List;
+
+import es.dmoral.toasty.Toasty;
 
 public class SportsNewsFragment extends MvpAppCompatFragment implements CategoryNewsView {
     private static SportsNewsFragment sportsNewsFragment = null ;
@@ -87,5 +90,9 @@ public class SportsNewsFragment extends MvpAppCompatFragment implements Category
     @Override
     public void dialogDismiss() {
 
+    }
+    @Override
+    public void error(String error) {
+        Toasty.error(getContext(),error, Toast.LENGTH_SHORT, true).show();
     }
 }

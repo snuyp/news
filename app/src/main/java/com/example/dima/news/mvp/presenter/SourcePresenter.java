@@ -45,12 +45,14 @@ public class SourcePresenter extends MvpPresenter<SourceView> {
                         }
                         else
                         {
+                            getViewState().error("Failure");
                             Log.e("Failure", "Failure");
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<WebSite> call, @NonNull Throwable t) {
+                        getViewState().error(t.getMessage());
                         Log.e("Failure", "Failure" + t.getMessage());
                     }
                 });

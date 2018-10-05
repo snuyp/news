@@ -15,34 +15,34 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @InjectViewState
-public class WeatherPresenter  extends MvpPresenter<WeatherView> {
+public class WeatherPresenter extends MvpPresenter<WeatherView> {
     private WeatherService weatherService = Common.getWeatherService();
-    public void loadWeather(String city) {
-        getViewState().dialogShow();
+    private CurrentWeather currentWeather;
 
-        weatherService.getToday(city, Common.units, Common.WEATHER_API_KEY).enqueue(new Callback<CurrentWeather>() {
-            @Override
-            public void onResponse(@NonNull Call<CurrentWeather> call, @NonNull Response<CurrentWeather> response) {
-                CurrentWeather currentWeather = null;
-                if (response.body() != null) {
-                    getViewState().weatherView(response.body());
+    public void loadWeather(String city) {
+        if (currentWeather == null) {
+            getViewState().dialogShow();
+            weatherService.getToday(city, Common.units, Common.WEATHER_API_KEY).enqueue(new Callback<CurrentWeather>() {
+                @Override
+                public void onResponse(@NonNull Call<CurrentWeather> call, @NonNull Response<CurrentWeather> response) {
+                    currentWeather = response.body();
+                    if (currentWeather != null) {
+                        getViewState().weatherView(currentWeather);
+                        getViewState().dialogDismiss();
+                    } else {
+                        getViewState().error();
+                        Log.e("ERROR", "Response error");
+                    }
                     getViewState().dialogDismiss();
                 }
-                else
-                {
+
+                @Override
+                public void onFailure(Call<CurrentWeather> call, Throwable t) {
+                    Log.e("ERROR", t.getMessage());
                     getViewState().error();
-                    Log.e("ERROR","Response error");
+                    getViewState().dialogDismiss();
                 }
-                getViewState().dialogDismiss();
-            }
-
-            @Override
-            public void onFailure(Call<CurrentWeather> call, Throwable t) {
-                Log.e("ERROR", t.getMessage());
-                getViewState().dialogDismiss();
-            }
-        });
-
-
+            });
+        }
     }
 }

@@ -40,7 +40,6 @@ public class CategoryNewsPresenter extends MvpPresenter<CategoryNewsView> {
         } else {
             loadCategory(country, category);
         }
-
     }
 
     private void loadCategory(String country, String category) {
@@ -53,13 +52,14 @@ public class CategoryNewsPresenter extends MvpPresenter<CategoryNewsView> {
                     getViewState().onLoadResult(articles);
                     getViewState().setRefresh(false);
                 } else {
-                    //TODO:
+                    getViewState().error("Failure");
                 }
             }
 
             @Override
             public void onFailure(Call<News> call, Throwable t) {
                 Log.e("Failure", "Failure" + t.getMessage());
+                getViewState().error(t.getMessage());
                 getViewState().setRefresh(false);
             }
         });
@@ -78,24 +78,21 @@ public class CategoryNewsPresenter extends MvpPresenter<CategoryNewsView> {
                                 getViewState().onLoadResult(removeFirstArticle);
                                 getViewState().dialogDismiss();
                             } else {
-                                //todo
+                                getViewState().error("Error");
                             }
                         }
 
                         @Override
                         public void onFailure(Call<News> call, Throwable t) {
-
+                            getViewState().error(t.getMessage());
                         }
                     });
-        }
-        else
-        {
-
+        } else {
 
         }
         getViewState().setRefresh(false);
-
     }
+
     public void loadSearchArticles(Context context, String search) {
         int agoDay = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("search_articles", ""));
         IntervalDays intervalDays = new IntervalDays(agoDay);
@@ -104,16 +101,16 @@ public class CategoryNewsPresenter extends MvpPresenter<CategoryNewsView> {
         newsService.getSearch(search, daysAgo, today, "popularity", Common.API_KEY).enqueue(new Callback<News>() {
             @Override
             public void onResponse(Call<News> call, Response<News> response) {
-                getViewState().onLoadResult(response.body().getArticles());
-                
-//                newsAdapter = new ListNewsAdapter(response.body().getArticles(), getBaseContext());
-//                newsAdapter.notifyDataSetChanged();
-//                listWebsite.setAdapter(newsAdapter);
+                if (response.body() != null) {
+                    getViewState().onLoadResult(response.body().getArticles());
+                } else {
+                    getViewState().error("Error");
+                }
             }
 
             @Override
             public void onFailure(Call<News> call, Throwable t) {
-
+                getViewState().error(t.getMessage());
             }
         });
     }

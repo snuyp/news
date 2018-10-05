@@ -130,6 +130,7 @@
     <string name="business">business</string>
     <string name="close">Close</string>
     <string name="sliding_down">Sliding down</string>
+    <string name="check_connection">Check connection</string>
 
 
 </resources>

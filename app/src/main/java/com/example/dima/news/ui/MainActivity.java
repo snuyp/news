@@ -1,9 +1,11 @@
 package com.example.dima.news.ui;
 
 import android.content.Intent;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,15 +34,23 @@ import com.example.dima.news.mvp.view.CategoryNewsView;
 import com.example.dima.news.mvp.view.WeatherView;
 import com.example.dima.news.ui.adapter.ListNewsAdapter;
 import com.example.dima.news.ui.adapter.NewsFragmentAdapter;
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
+
+import org.reactivestreams.Subscription;
 
 import java.util.List;
 
 import dmax.dialog.SpotsDialog;
+import es.dmoral.toasty.Toasty;
 import io.paperdb.Paper;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends MvpAppCompatActivity implements WeatherView, CategoryNewsView{
+public class MainActivity extends MvpAppCompatActivity implements WeatherView, CategoryNewsView {
     @InjectPresenter
     WeatherPresenter weatherPresenter;
 
@@ -48,7 +59,7 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
 
     private SpotsDialog dialog;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private TextView cityTemp, sun, windSpeedHumidity, pressure,searchTxt;
+    private TextView cityTemp, sun, windSpeedHumidity, pressure, searchTxt;
     private ImageView weatherImage;
     private AppBarLayout appBarLayout;
     private SlidingUpPanelLayout slideUp;
@@ -56,6 +67,8 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
     private RecyclerView lstNews;
     private RecyclerView.LayoutManager layoutManager;
     private ListNewsAdapter adapter;
+    private Disposable internetDisposable;
+    private Snackbar snackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +83,7 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
 
         ViewPager mViewPager = findViewById(R.id.viewPager);
 
-        NewsFragmentAdapter adapter = new NewsFragmentAdapter(getSupportFragmentManager(),this);
+        NewsFragmentAdapter adapter = new NewsFragmentAdapter(getSupportFragmentManager(), this);
         mViewPager.setAdapter(adapter);
 
         TabLayout mTabLayout = findViewById(R.id.tabLayout);
@@ -114,9 +127,26 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
                 slideUp.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             }
         });
-
+        snackbar = Snackbar.make(slideUp, R.string.check_connection, Snackbar.LENGTH_INDEFINITE);
 
         weatherPresenter.loadWeather(city);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        internetDisposable = ReactiveNetwork.observeInternetConnectivity()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(isConnected -> {
+                    if(!isConnected) {
+                       snackbar.show();
+                    }
+                    else
+                    {
+                       snackbar.dismiss();
+                    }
+                });
     }
 
     @Override
@@ -137,12 +167,13 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                categoryNewsPresenter.loadSearchArticles(getBaseContext(),query);
+                categoryNewsPresenter.loadSearchArticles(getBaseContext(), query);
                 slideUp.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
                 slideUp.setTouchEnabled(false);
                 searchTxt.setText(query);
                 return true;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
 
@@ -207,6 +238,20 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        safelyDispose(internetDisposable);
+    }
+
+    private void safelyDispose(Disposable... disposables) {
+        for (Disposable subscription : disposables) {
+            if (subscription != null && !subscription.isDisposed()) {
+                subscription.dispose();
+            }
+        }
+    }
+
+    @Override
     public void error() {
         Toast.makeText(this, R.string.openWeatherMap_not_working, Toast.LENGTH_SHORT).show();
     }
@@ -220,6 +265,11 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
     public void onLoadResult(List<Article> articles) {
         adapter = new ListNewsAdapter(articles);
         lstNews.setAdapter(adapter);
+    }
+
+    @Override
+    public void error(String error) {
+        Toasty.error(getBaseContext(), error, Toast.LENGTH_SHORT, true).show();
     }
 
     @Override
