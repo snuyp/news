@@ -1,6 +1,5 @@
 package com.example.dima.news.ui.adapter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -10,13 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.dima.news.ui.DetailArticle;
 import com.example.dima.news.Interface.ItemClickListener;
 import com.example.dima.news.R;
 import com.example.dima.news.common.ISO8601Parse;
 import com.example.dima.news.mvp.model.news.Article;
 import com.github.curioustechizen.ago.RelativeTimeTextView;
-import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -24,9 +24,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * Created by Dima on 03.04.2018.
- */
 class ListNewsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     ItemClickListener itemClickListener;
 
@@ -57,7 +54,6 @@ class ListNewsViewHolder extends RecyclerView.ViewHolder implements View.OnClick
 
 public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder> {
     private List<Article> articleList;
-    private Context context;
 
     public ListNewsAdapter(List<Article> articleList) {
         this.articleList = articleList;
@@ -76,13 +72,14 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder> {
     public void onBindViewHolder(@NonNull final ListNewsViewHolder holder, int position) {
 
         try {
-            Picasso.with(holder.itemView.getContext())
+            Glide.with(holder.itemView.getContext())
                     .load(articleList.get(position).getUrlToImage())
-                    .placeholder(R.drawable.news)
+                    .apply(new RequestOptions().placeholder(R.drawable.news))
                     .into(holder.articleImage);
-
             if (articleList.get(position).getTitle().length() > 65) {
                 holder.articleTitle.setText(articleList.get(position).getTitle().substring(0, 65) + "...");
+            } else if(String.valueOf(articleList.get(position).getTitle().charAt(0)).equals("�")) {
+                holder.articleTitle.setText(R.string.title_not_found);
             } else {
                 holder.articleTitle.setText(articleList.get(position).getTitle());
             }

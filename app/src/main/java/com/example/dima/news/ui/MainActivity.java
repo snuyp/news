@@ -1,19 +1,17 @@
 package com.example.dima.news.ui;
 
+import android.Manifest;
 import android.content.Intent;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +23,9 @@ import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.bumptech.glide.Glide;
 import com.example.dima.news.R;
+import com.example.dima.news.common.Common;
 import com.example.dima.news.mvp.model.news.Article;
 import com.example.dima.news.mvp.model.weather.CurrentWeather;
 import com.example.dima.news.mvp.presenter.CategoryNewsPresenter;
@@ -35,19 +35,21 @@ import com.example.dima.news.mvp.view.WeatherView;
 import com.example.dima.news.ui.adapter.ListNewsAdapter;
 import com.example.dima.news.ui.adapter.NewsFragmentAdapter;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.squareup.picasso.Picasso;
-
-import org.reactivestreams.Subscription;
 
 import java.util.List;
 
 import dmax.dialog.SpotsDialog;
 import es.dmoral.toasty.Toasty;
+import io.nlopez.smartlocation.SmartLocation;
 import io.paperdb.Paper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends MvpAppCompatActivity implements WeatherView, CategoryNewsView {
@@ -58,9 +60,8 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
     CategoryNewsPresenter categoryNewsPresenter;
 
     private SpotsDialog dialog;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private TextView cityTemp, sun, windSpeedHumidity, pressure, searchTxt;
-    private ImageView weatherImage;
+    private TextView cityTemp, sun, pressure, searchTxt,humidity,windSpeed;
+    private ImageView weatherImage,image_planet;
     private AppBarLayout appBarLayout;
     private SlidingUpPanelLayout slideUp;
 
@@ -76,7 +77,6 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
         setContentView(R.layout.activity_main);
 
         Paper.init(this);
-        final String city = PreferenceManager.getDefaultSharedPreferences(this).getString("city", "");
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -90,6 +90,9 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         mTabLayout.setupWithViewPager(mViewPager);
 
+        onGrantedPermission();
+
+
         appBarLayout = findViewById(R.id.app_bar_layout);
 
         lstNews = findViewById(R.id.lst_news);
@@ -99,10 +102,13 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
 
         //Weather
         cityTemp = findViewById(R.id.weather_name_t);
-        windSpeedHumidity = findViewById(R.id.weather_wind_speed);
+        windSpeed = findViewById(R.id.weather_wind_speed);
         sun = findViewById(R.id.weather_sunrise);
         pressure = findViewById(R.id.weather_pressure);
         weatherImage = findViewById(R.id.weather_image);
+        humidity = findViewById(R.id.weather_humidity);
+
+        image_planet = findViewById(R.id.image_planet);
 
         slideUp = findViewById(R.id.sliding_layout);
         slideUp.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
@@ -110,26 +116,43 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
         searchTxt = findViewById(R.id.search_text);
 
         dialog = new SpotsDialog(this);
-        swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+
+        image_planet.setOnClickListener(v -> {
+            startActivity(new Intent(this,WeatherForecastActivity.class));
+        });
 
         LinearLayout weatherForecast = findViewById(R.id.open_weather_forecast);
-        weatherForecast.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, WeatherForecastActivity.class);
-                startActivity(intent);
-            }
+        weatherForecast.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, WeatherForecastActivity.class);
+            startActivity(intent);
         });
         ImageButton closeSlide = findViewById(R.id.close_slide);
-        closeSlide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                slideUp.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-            }
-        });
+        closeSlide.setOnClickListener(v -> slideUp.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN));
         snackbar = Snackbar.make(slideUp, R.string.check_connection, Snackbar.LENGTH_INDEFINITE);
+    }
+    public void getWeather()
+    {
+            SmartLocation.with(this).location()
+                    .oneFix()
+                    .start(location -> {
+                        Common.lat = location.getLatitude();
+                        Common.lon = location.getLongitude();
+                        weatherPresenter.loadWeather(location.getLatitude(),location.getLongitude());
+                    });
+    }
 
-        weatherPresenter.loadWeather(city);
+    private void onGrantedPermission() {
+        Dexter.withActivity(this)
+                .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        getWeather();
+                    }
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) { }
+                })
+                .check();
     }
 
     @Override
@@ -141,9 +164,7 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
                 .subscribe(isConnected -> {
                     if(!isConnected) {
                        snackbar.show();
-                    }
-                    else
-                    {
+                    } else {
                        snackbar.dismiss();
                     }
                 });
@@ -198,19 +219,15 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
         switch (item.getItemId()) {
             case R.id.action_settings:
                 // User chose the "Settings" item, show the app settings UI...
-                //Common.getPreviousDateOfEndDate(3).getToday();
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 return true;
 
-//            case R.id.action_search:
-//                // User chose the "Favorite" action, mark the current item
-//                // as a favorite...
-//                return true;
+            case R.id.action_charts:
+                startActivity(new Intent(this,WeatherForecastActivity.class));
+                return true;
 
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
         }
@@ -219,20 +236,27 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
 
     @Override
     public void weatherView(CurrentWeather currentWeather) {
-        String cityT = currentWeather.getName() + " " + currentWeather.getMain().getStringTemp().toString();
-        cityTemp.setText(cityT);
+        String cityT = currentWeather.getName();
+        String t = currentWeather.getMain().getStringTemp().toString();
+        if(cityT.length() > 13 ) {
+            cityTemp.setText(String.format("%s... %s", cityT.substring(0, 10), t));
+        } else {
+            cityTemp.setText(String.format("%s %s", cityT, t));
+        }
         pressure.setText(
                 String.format("%s %s", getResources().getString(R.string.pressure),
                         currentWeather.getMain().getPressure()));
 
-        windSpeedHumidity.setText(
-                String.format("%s %s\n%s %s", getResources().getString(R.string.wind_speed),
-                        currentWeather.getWind().getSpeed(), getResources().getString(R.string.humidity),
-                        currentWeather.getMain().getHumidity()));
+        windSpeed.setText(String.format("%s %s",
+                getResources().getString(R.string.wind_speed), currentWeather.getWind().getSpeed()));
 
-        sun.setText(String.format("%s%s", currentWeather.getSys().getSunrise(), currentWeather.getSys().getSunset()));
+        humidity.setText(String.format("%s %s",
+                getResources().getString(R.string.humidity), currentWeather.getMain().getHumidity()));
 
-        Picasso.with(getBaseContext())
+        sun.setText(String.format("%s%s",
+                currentWeather.getSys().getSunrise(), currentWeather.getSys().getSunset()));
+
+        Glide.with(getBaseContext())
                 .load(currentWeather.getWeather().get(0).getIcon())
                 .into(weatherImage);
     }
@@ -271,7 +295,6 @@ public class MainActivity extends MvpAppCompatActivity implements WeatherView, C
     public void error(String error) {
         Toasty.error(getBaseContext(), error, Toast.LENGTH_SHORT, true).show();
     }
-
     @Override
     public void dialogShow() {
         dialog.show();

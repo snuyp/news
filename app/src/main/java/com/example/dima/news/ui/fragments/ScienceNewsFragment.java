@@ -1,6 +1,7 @@
 package com.example.dima.news.ui.fragments;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -35,8 +36,7 @@ public class ScienceNewsFragment extends MvpAppCompatFragment implements Categor
     private RecyclerView lstNews;
     private RecyclerView.LayoutManager layoutManager;
     private ListNewsAdapter adapter;
-
-    private final String country = "ru"; //todo: edit later
+    private String country;
     private final String category = "science";
 
     public static ScienceNewsFragment getInstance() {
@@ -55,7 +55,8 @@ public class ScienceNewsFragment extends MvpAppCompatFragment implements Categor
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_category,container,false);
-
+        country = PreferenceManager.
+                getDefaultSharedPreferences(getContext()).getString("select_country", "ru");
         lstNews = v.findViewById(R.id.lst_news);
         lstNews.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
@@ -68,7 +69,7 @@ public class ScienceNewsFragment extends MvpAppCompatFragment implements Categor
                 categoryNewsPresenter.categoryNews(country,category,true);
             }
         });
-        categoryNewsPresenter.categoryNews(country,category,true);
+        categoryNewsPresenter.categoryNews(country,category,false);
         return v;
     }
 
@@ -94,5 +95,11 @@ public class ScienceNewsFragment extends MvpAppCompatFragment implements Categor
     @Override
     public void dialogDismiss() {
 
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        country = PreferenceManager.
+                getDefaultSharedPreferences(getContext()).getString("select_country", "ru");
     }
 }

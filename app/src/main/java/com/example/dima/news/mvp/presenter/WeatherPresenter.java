@@ -19,10 +19,10 @@ public class WeatherPresenter extends MvpPresenter<WeatherView> {
     private WeatherService weatherService = Common.getWeatherService();
     private CurrentWeather currentWeather;
 
-    public void loadWeather(String city) {
+    public void loadWeather(double lat, double lon) {
         if (currentWeather == null) {
             getViewState().dialogShow();
-            weatherService.getToday(city, Common.units, Common.WEATHER_API_KEY).enqueue(new Callback<CurrentWeather>() {
+            weatherService.getToday(lat,lon,Common.units, Common.WEATHER_API_KEY).enqueue(new Callback<CurrentWeather>() {
                 @Override
                 public void onResponse(@NonNull Call<CurrentWeather> call, @NonNull Response<CurrentWeather> response) {
                     currentWeather = response.body();
@@ -39,7 +39,6 @@ public class WeatherPresenter extends MvpPresenter<WeatherView> {
                 @Override
                 public void onFailure(Call<CurrentWeather> call, Throwable t) {
                     Log.e("ERROR", t.getMessage());
-                    getViewState().error();
                     getViewState().dialogDismiss();
                 }
             });

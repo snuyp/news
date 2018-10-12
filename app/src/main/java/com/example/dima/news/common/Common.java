@@ -13,7 +13,8 @@ public class Common {
     public static final String API_KEY = "5e4c61bd768b476a9fc0e5c7e6b71eac";
     public static final String WEATHER_API_KEY = "6942f7ea25878b9d8540aa631b494d8c";
     public static String units = "metric";
-
+    public static double lat=0;
+    public static double lon=0;
 
     public static NewsService getNewsService()
     {

@@ -12,9 +12,7 @@ import com.example.dima.news.common.IntervalDays;
 import com.example.dima.news.mvp.model.news.Article;
 import com.example.dima.news.mvp.model.news.News;
 import com.example.dima.news.mvp.view.CategoryNewsView;
-import com.example.dima.news.ui.adapter.ListNewsAdapter;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -34,7 +32,7 @@ public class CategoryNewsPresenter extends MvpPresenter<CategoryNewsView> {
                 News news = new Gson().fromJson(cache, News.class);
                 getViewState().onLoadResult(news.getArticles());
 
-            } else {
+            } else  {
                 loadCategory(country, category);
             }
         } else {
@@ -48,8 +46,10 @@ public class CategoryNewsPresenter extends MvpPresenter<CategoryNewsView> {
             @Override
             public void onResponse(Call<News> call, Response<News> response) {
                 if (response.body() != null) {
-                    List<Article> articles = response.body().getArticles();
-                    getViewState().onLoadResult(articles);
+                    News news = response.body();
+                    //Save to cache
+                    Paper.book().write(category, new Gson().toJson(response.body()));
+                    getViewState().onLoadResult(news.getArticles());
                     getViewState().setRefresh(false);
                 } else {
                     getViewState().error("Failure");
@@ -59,24 +59,23 @@ public class CategoryNewsPresenter extends MvpPresenter<CategoryNewsView> {
             @Override
             public void onFailure(Call<News> call, Throwable t) {
                 Log.e("Failure", "Failure" + t.getMessage());
-                getViewState().error(t.getMessage());
                 getViewState().setRefresh(false);
             }
         });
     }
 
     public void loadNewsOfSource(String source, boolean isRefreshed) {
-        if (!isRefreshed) {
+        if (!isRefreshed ) {
             getViewState().dialogShow();
             newsService.getHeadlines(source, Common.API_KEY)
                     .enqueue(new Callback<News>() {
                         @Override
                         public void onResponse(Call<News> call, Response<News> response) {
                             if (response.body() != null) {
-                                List<Article> removeFirstArticle = response.body().getArticles();
-                                removeFirstArticle.remove(0);
+                                List<Article>removeFirstArticle = response.body().getArticles();
                                 getViewState().onLoadResult(removeFirstArticle);
                                 getViewState().dialogDismiss();
+                                getViewState().setRefresh(false);
                             } else {
                                 getViewState().error("Error");
                             }
@@ -87,8 +86,6 @@ public class CategoryNewsPresenter extends MvpPresenter<CategoryNewsView> {
                             getViewState().error(t.getMessage());
                         }
                     });
-        } else {
-
         }
         getViewState().setRefresh(false);
     }

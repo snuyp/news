@@ -52,7 +52,6 @@ public class SourcePresenter extends MvpPresenter<SourceView> {
 
                     @Override
                     public void onFailure(@NonNull Call<WebSite> call, @NonNull Throwable t) {
-                        getViewState().error(t.getMessage());
                         Log.e("Failure", "Failure" + t.getMessage());
                     }
                 });
@@ -64,12 +63,18 @@ public class SourcePresenter extends MvpPresenter<SourceView> {
             newsService.getSources(languageSource, Common.API_KEY).enqueue(new Callback<WebSite>() {
                 @Override
                 public void onResponse(@NonNull Call<WebSite> call, @NonNull Response<WebSite> response) {
-                    getViewState().onLoadResult(response.body().getSources());
+                    if(response.body() != null) {
 
-                    //Save to cache
-                    Paper.book().write("cache", new Gson().toJson(response.body()));
+                        //Save to cache
+                        Paper.book().write("cache", new Gson().toJson(response.body()));
+                        getViewState().onLoadResult(response.body().getSources());
 
-                    getViewState().setRefresh(false);
+                        getViewState().setRefresh(false);
+                    }
+                    else
+                    {
+                        getViewState().error("Failure");
+                    }
                 }
 
                 @Override

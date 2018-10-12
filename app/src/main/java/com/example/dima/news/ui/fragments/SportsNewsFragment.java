@@ -1,6 +1,7 @@
 package com.example.dima.news.ui.fragments;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -34,8 +35,7 @@ public class SportsNewsFragment extends MvpAppCompatFragment implements Category
 
     private RecyclerView lstNews;
     private ListNewsAdapter adapter;
-
-    private final String country = "ru"; //todo: edit later
+    private String country;
     private final String category = "sports";
 
     public static SportsNewsFragment getInstance() {
@@ -54,7 +54,8 @@ public class SportsNewsFragment extends MvpAppCompatFragment implements Category
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_category,container,false);
-
+        country = PreferenceManager.
+                getDefaultSharedPreferences(getContext()).getString("select_country", "ru");
         lstNews = v.findViewById(R.id.lst_news);
         lstNews.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -67,7 +68,7 @@ public class SportsNewsFragment extends MvpAppCompatFragment implements Category
                 categoryNewsPresenter.categoryNews(country,category,true);
             }
         });
-        categoryNewsPresenter.categoryNews(country,category,true);
+        categoryNewsPresenter.categoryNews(country,category,false);
         return v;
     }
 
@@ -94,5 +95,11 @@ public class SportsNewsFragment extends MvpAppCompatFragment implements Category
     @Override
     public void error(String error) {
         Toasty.error(getContext(),error, Toast.LENGTH_SHORT, true).show();
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        country = PreferenceManager.
+                getDefaultSharedPreferences(getContext()).getString("select_country", "ru");
     }
 }

@@ -2,6 +2,7 @@ package com.example.dima.news.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -39,9 +40,6 @@ import lecho.lib.hellocharts.view.Chart;
 import lecho.lib.hellocharts.view.ColumnChartView;
 import lecho.lib.hellocharts.view.LineChartView;
 
-/**
- * Created by Dima on 02.05.2018.
- */
 
 public class WeatherForecastActivity extends MvpAppCompatActivity implements WeatherForecastView{
 
@@ -58,7 +56,6 @@ public class WeatherForecastActivity extends MvpAppCompatActivity implements Wea
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weather_forecast);
-        String city = PreferenceManager.getDefaultSharedPreferences(this).getString("city", "");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.weather_forecast);
@@ -73,7 +70,7 @@ public class WeatherForecastActivity extends MvpAppCompatActivity implements Wea
 
 
         chartTop = findViewById(R.id.chart_top);
-        weatherForecastPresenter.getWeatherForecast(city);
+        weatherForecastPresenter.getWeatherForecast();
         chartBottom = findViewById(R.id.chart_bottom);
         dialog = new SpotsDialog(this);
     }
@@ -111,8 +108,11 @@ public class WeatherForecastActivity extends MvpAppCompatActivity implements Wea
 
         // Set selection mode to keep selected month column highlighted.
         chartBottom.setValueSelectionEnabled(true);
+
         chartBottom.setZoomEnabled(false);
         chartBottom.setZoomType(ZoomType.HORIZONTAL);
+
+
     }
 
 
@@ -129,6 +129,7 @@ public class WeatherForecastActivity extends MvpAppCompatActivity implements Wea
         chartTop.setCurrentViewport(v);
 
         chartTop.setZoomType(ZoomType.HORIZONTAL);
+
     }
 
     @Override

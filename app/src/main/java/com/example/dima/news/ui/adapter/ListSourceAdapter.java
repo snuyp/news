@@ -18,10 +18,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
-/**
- * Created by Dima on 30.03.2018.
- */
 class ListSourceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     ItemClickListener itemClickListener;
     TextView sourceTitle;

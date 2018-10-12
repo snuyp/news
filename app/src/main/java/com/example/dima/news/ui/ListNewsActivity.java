@@ -4,36 +4,25 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
-import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.example.dima.news.Interface.NewsService;
+import com.bumptech.glide.Glide;
 import com.example.dima.news.R;
-import com.example.dima.news.mvp.model.news.SourceNews;
-import com.example.dima.news.mvp.presenter.CategoryNewsPresenter;
-import com.example.dima.news.mvp.presenter.SourcePresenter;
-import com.example.dima.news.mvp.view.CategoryNewsView;
-import com.example.dima.news.mvp.view.SourceView;
-import com.example.dima.news.ui.adapter.ListNewsAdapter;
-import com.example.dima.news.common.Common;
 import com.example.dima.news.mvp.model.news.Article;
-import com.example.dima.news.mvp.model.news.News;
+import com.example.dima.news.mvp.presenter.CategoryNewsPresenter;
+import com.example.dima.news.mvp.view.CategoryNewsView;
+import com.example.dima.news.ui.adapter.ListNewsAdapter;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.github.florent37.diagonallayout.DiagonalLayout;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import dmax.dialog.SpotsDialog;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ListNewsActivity extends MvpAppCompatActivity implements CategoryNewsView{
     @InjectPresenter
@@ -103,15 +92,21 @@ public class ListNewsActivity extends MvpAppCompatActivity implements CategoryNe
 
     @Override
     public void onLoadResult(List<Article> articles) {
-        adapter = new ListNewsAdapter(articles);
-        lstNews.setAdapter(adapter);
-
-        Picasso.with(getBaseContext())
+        Glide.with(getBaseContext())
                 .load(articles.get(0).getUrlToImage())
                 .into(kenBurnsView);
-        topTitle.setText(articles.get(0).getTitle());
+
+        if(String.valueOf(articles.get(0).getTitle().charAt(0)).equals("�")) {
+            topTitle.setText(getString(R.string.title_not_found));
+        }else {
+            topTitle.setText(articles.get(0).getTitle());
+        }
+
         topAuthor.setText(articles.get(0).getAuthor());
         webHotURL = articles.get(0).getUrl();
+        articles.remove(0);
+        adapter = new ListNewsAdapter(articles);
+        lstNews.setAdapter(adapter);
     }
 
     @Override

@@ -57,6 +57,27 @@
         <item>es</item>
         <item>ar</item>
     </string-array>
+    <string name="pref_select_country">Select language</string>
+    <string-array name="pref_select_country">
+        <item>Russian</item>
+        <item>Great Britain</item>
+        <item>USA</item>
+        <item>German</item>
+        <item>French</item>
+        <item>Spanish </item>
+        <item>Arabic</item>
+    </string-array>
+    <string-array name="pref_select_country_values">
+        <item>ru</item>
+        <item>gb</item>
+        <item>us</item>
+        <item>de</item>
+        <item>fr</item>
+        <item>es</item>
+        <item>ar</item>
+    </string-array>
+    <string name="select_country_you_want_to_get_headlines">Select the country for you want to get headlines</string>
+    <string name="pref_select_country_news">Select country</string>
     <string-array name="days">
         <item>Mon</item>
         <item>Tue</item>
@@ -66,7 +87,7 @@
         <item>Sat</item>
         <item>Sun</item>
     </string-array>
-    
+
     <!-- Example settings RatesData & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
 
@@ -131,6 +152,10 @@
     <string name="close">Close</string>
     <string name="sliding_down">Sliding down</string>
     <string name="check_connection">Check connection</string>
+    <string name="title_not_found">Title not found</string>
+    <string name="update">Update</string>
+    <string name="permission_granted">Permission granted</string>
+    <string name="permission_denied">Permission denied</string>
 
 
 </resources>

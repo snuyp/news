@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.dima.news.R;
 import com.example.dima.news.mvp.model.weather.ForecastList;
-import com.squareup.picasso.Picasso;
 
 class ListWeatherForecastViewHolder extends RecyclerView.ViewHolder {
     TextView t,time,humidity;
@@ -22,7 +22,6 @@ class ListWeatherForecastViewHolder extends RecyclerView.ViewHolder {
         t = itemView.findViewById(R.id.weather_forecast_t);
         humidity = itemView.findViewById(R.id.humidity);
 
-//        date = itemView.findViewById(R.id.weather_forecast_date);
         time = itemView.findViewById(R.id.weather_forecast_time);
         weatgerImage = itemView.findViewById(R.id.weather_forecast_image);
     }
@@ -54,10 +53,9 @@ public class ListWeatherForecastAdapter extends RecyclerView.Adapter<ListWeather
                         weatherForecastList.get(position).getMain().getHumidity()));
 
 
-         String [] date = weatherForecastList.get(position).getDtTxt().split(" "); //0 - date, 1 - time
-        //holder.date.setText(date[0]);
+        String [] date = weatherForecastList.get(position).getDtTxt().split(" "); //0 - date, 1 - time
         holder.time.setText(date[1].substring(0,5));
-        Picasso.with(holder.itemView.getContext())
+        Glide.with(holder.itemView.getContext())
                 .load(weatherForecastList.get(position).getWeather().get(0).getIcon())
                 .into(holder.weatgerImage);
     }

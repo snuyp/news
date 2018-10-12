@@ -1,5 +1,6 @@
 package com.example.dima.news.mvp.presenter;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -40,10 +41,10 @@ public class WeatherForecastPresenter extends MvpPresenter<WeatherForecastView> 
     public String[] time = new String[]{"03:00", "06:00", "09:00", "12:00", "15:00", "18:00","21:00","24:00"};
 
 
-    public void getWeatherForecast(String city) {
+    public void getWeatherForecast() {
         if(forecastWeather == null) {
             getViewState().dialogShow();
-            weatherService.getForecast(city, Common.units, Common.WEATHER_API_KEY).enqueue(new Callback<ForecastWeather>() {
+            weatherService.getForecast(Common.lat,Common.lon, Common.units, Common.WEATHER_API_KEY).enqueue(new Callback<ForecastWeather>() {
                 @Override
                 public void onResponse(@NonNull Call<ForecastWeather> call, @NonNull Response<ForecastWeather> response) {
                     if (response.body() != null) {
@@ -59,7 +60,6 @@ public class WeatherForecastPresenter extends MvpPresenter<WeatherForecastView> 
                 @Override
                 public void onFailure(Call<ForecastWeather> call, Throwable t) {
                     Log.e("Error", t.getMessage());
-                    getViewState().error(t.getMessage());
                 }
             });
         }
@@ -69,7 +69,9 @@ public class WeatherForecastPresenter extends MvpPresenter<WeatherForecastView> 
 
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
         List<Column> columns = new ArrayList<Column>();
-        List<SubcolumnValue> values;
+        List<SubcolumnValue> values = null;
+        int todayColor = 0;
+
         int i = 0;
         for (String day : mapForecastOnTheDays.keySet()) {
 
@@ -84,7 +86,10 @@ public class WeatherForecastPresenter extends MvpPresenter<WeatherForecastView> 
             axisValues.add(new AxisValue(i).setLabel(day));
 
             columns.add(new Column(values).setHasLabels(true));
-
+            if(i == 0)
+            {
+                todayColor =values.get(0).getColor();
+            }
             i++;
         }
 
@@ -94,11 +99,11 @@ public class WeatherForecastPresenter extends MvpPresenter<WeatherForecastView> 
         columnData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(2));
         getViewState().chartBottomView(columnData);
 
-        generateInitialLineData(time);
+        generateInitialLineData(time, todayColor);
     }
 
 
-    private void generateInitialLineData(String[] days) {
+    private void generateInitialLineData(String[] days,int color) {
         int numValues = days.length;
 
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
@@ -120,6 +125,7 @@ public class WeatherForecastPresenter extends MvpPresenter<WeatherForecastView> 
 
         Viewport viewPort = new Viewport(0,30,7,-30);
         getViewState().chartTop(lineData,viewPort);
+        generateLineData(0,color,100);
     }
 
     public void generateLineData(int columnIndex, int color, float range) {
@@ -142,8 +148,7 @@ public class WeatherForecastPresenter extends MvpPresenter<WeatherForecastView> 
                 difference--;
                 value.setTarget(value.getX(),tempOfDays.get(0));
                 value.setLabel("-");
-            }
-            else {
+            } else {
                 value.setTarget(value.getX(), tempOfDays.get(i));
                 value.setLabel(String.valueOf(tempOfDays.get(i).intValue()));
                 i++;

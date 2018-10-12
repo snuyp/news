@@ -1,6 +1,7 @@
 package com.example.dima.news.ui.fragments;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -34,8 +35,8 @@ public class BusinessNewsFragment extends MvpAppCompatFragment implements Catego
     private RecyclerView lstNews;
     private RecyclerView.LayoutManager layoutManager;
     private ListNewsAdapter adapter;
+    private String country;
 
-    private final String country = "ru"; //todo: edit later
     private final String category = "business";
     public static BusinessNewsFragment getInstance() {
         if (fragment == null) {
@@ -54,6 +55,9 @@ public class BusinessNewsFragment extends MvpAppCompatFragment implements Catego
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_category,container,false);
 
+        country = PreferenceManager.
+                getDefaultSharedPreferences(getContext()).getString("select_country", "ru");
+
         lstNews = v.findViewById(R.id.lst_news);
         lstNews.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
@@ -66,8 +70,15 @@ public class BusinessNewsFragment extends MvpAppCompatFragment implements Catego
                 categoryNewsPresenter.categoryNews(country,category,true);
             }
         });
-        categoryNewsPresenter.categoryNews(country,category,true);
+        categoryNewsPresenter.categoryNews(country,category,false);
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        country = PreferenceManager.
+                getDefaultSharedPreferences(getContext()).getString("select_country", "ru");
     }
 
     @Override

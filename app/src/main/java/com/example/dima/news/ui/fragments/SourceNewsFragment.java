@@ -27,7 +27,7 @@ import es.dmoral.toasty.Toasty;
 
 public class SourceNewsFragment extends MvpAppCompatFragment implements SourceView {
     private static SourceNewsFragment sourceNewsFragment = null;
-
+    private  String languageSource;
     @InjectPresenter
     SourcePresenter sourcePresenter;
 
@@ -57,10 +57,8 @@ public class SourceNewsFragment extends MvpAppCompatFragment implements SourceVi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_source, container, false);
-
-        final String languageSource = PreferenceManager.
-                getDefaultSharedPreferences(getContext()).getString("select_language", "");
-
+        languageSource = PreferenceManager.
+                getDefaultSharedPreferences(getContext()).getString("select_language", "ru");
         listWebsite = v.findViewById(R.id.list_source);
         listWebsite.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
@@ -74,8 +72,15 @@ public class SourceNewsFragment extends MvpAppCompatFragment implements SourceVi
             }
         });
         dialog = new SpotsDialog(getContext());
-        sourcePresenter.loadSources(languageSource,true);
+        sourcePresenter.loadSources(languageSource,false);
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        languageSource = PreferenceManager.
+                getDefaultSharedPreferences(getContext()).getString("select_language", "ru");
     }
 
     @Override
@@ -103,4 +108,5 @@ public class SourceNewsFragment extends MvpAppCompatFragment implements SourceVi
     public void error(String error) {
         Toasty.error(getContext(),error, Toast.LENGTH_SHORT, true).show();
     }
+
 }
