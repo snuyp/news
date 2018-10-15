@@ -117,7 +117,8 @@
         <item>Вскр</item>
     </string-array>
 
-    <string name="find_sources_that_display_news_in_a_specific_language">Поиск источников, отображающих новости на определенном языке</string>
+    <string name="find_sources_that_display_news_in_a_specific_language">
+        Поиск источников, отображающих новости на определенном языке</string>
     <string name="weather_forecast_on_4_days">Прогноз погоды</string>
     <string name="today">Сегодня</string>
 
@@ -131,11 +132,11 @@
     <string name="business">Бизнес</string>
     <string name="close">Закрыть</string>
     <string name="sliding_down">Sliding down</string>
-    <string name="check_connection">Проверьте соеденение с интернетом</string>
+    <string name="check_connection">Проверьте соединение с интернетом</string>
     <string name="title_not_found">Заголовок не найден</string>
     <string name="update">Обновить</string>
     <string name="permission_granted">Разрешение получено</string>
-    <string name="permission_denied">Доступ запрещен</string>
+    <string name="permission_denied">Разрещение не получено</string>
 
 
 </resources>

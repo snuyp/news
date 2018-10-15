@@ -56,9 +56,9 @@ public class ForecastWeather {
         List<ForecastList> s = mapForecastOnTheDays.get(mapForecastOnTheDays.keySet().toArray()[index]);
         return tempOfDays(s.get(0).getDayOfWeek());
     }
-    public List<ForecastList> forecastOnTheDays (int index)
-    {
-        return  mapForecastOnTheDays.get(mapForecastOnTheDays.keySet().toArray()[index]);
+
+    public List<ForecastList> forecastOnTheDays(int index) {
+        return mapForecastOnTheDays.get(mapForecastOnTheDays.keySet().toArray()[index]);
     }
 
     private void splitForecastOnDay() {
