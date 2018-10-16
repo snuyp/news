@@ -43,13 +43,13 @@
             <TextView
                 android:id="@+id/article_description"
                 android:layout_gravity="start"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="10sp"/>
 
             <com.github.curioustechizen.ago.RelativeTimeTextView
                 android:id="@+id/article_time"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:textSize="14sp"

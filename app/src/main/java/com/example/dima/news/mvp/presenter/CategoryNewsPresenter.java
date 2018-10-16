@@ -91,7 +91,7 @@ public class CategoryNewsPresenter extends MvpPresenter<CategoryNewsView> {
     }
 
     public void loadSearchArticles(Context context, String search) {
-        int agoDay = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("search_articles", ""));
+        int agoDay = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("search_articles", "3"));
         IntervalDays intervalDays = new IntervalDays(agoDay);
         String today = intervalDays.getToday();
         String daysAgo = intervalDays.getDaysAgo();

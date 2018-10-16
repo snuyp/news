@@ -84,15 +84,13 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder> {
             } else {
                 holder.articleTitle.setText(articleList.get(position).getTitle());
             }
-            if( String.valueOf(articleList.get(position).getDescription().charAt(0)).equals("�") )
-            {
-                holder.articleDescription.setText("");
-            } else if(articleList.get(position).getDescription().length() > 200){
-                holder.articleDescription.setText(articleList.get(position).getDescription().substring(0,200)+"...");
-            } else {
-                holder.articleDescription.setText(articleList.get(position).getDescription());
+            if( articleList.get(position).getDescription() != null ){
+                if(articleList.get(position).getDescription().length() >200) {
+                    holder.articleDescription.setText(articleList.get(position).getDescription().substring(0, 200) + "...");
+                } else {
+                    holder.articleDescription.setText(articleList.get(position).getDescription());
+                }
             }
-
             Date date = ISO8601Parse.parse(articleList.get(position).getPublishedAt());
             if (date != null) {
                 holder.articleTime.setReferenceTime(date.getTime());
@@ -110,8 +108,6 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder> {
             Log.e("ERROR", e.getMessage());
         } catch (ParseException | IllegalArgumentException e) {
             Log.e("ParseException", e.getMessage());
-        } catch (StringIndexOutOfBoundsException e) {
-            Log.e("StringIndexOutException", e.getMessage());
         }
     }
 
