@@ -71,7 +71,14 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final ListNewsViewHolder holder, int position) {
-
+        holder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onClick(View view, int position, boolean isLongClick) {
+                Intent intent = new Intent(holder.itemView.getContext(), DetailArticle.class);
+                intent.putExtra("webURL", articleList.get(position).getUrl());
+                holder.itemView.getContext().startActivity(intent);
+            }
+        });
         try {
             Glide.with(holder.itemView.getContext())
                     .load(articleList.get(position).getUrlToImage())
@@ -95,14 +102,6 @@ public class ListNewsAdapter extends RecyclerView.Adapter<ListNewsViewHolder> {
             if (date != null) {
                 holder.articleTime.setReferenceTime(date.getTime());
             }
-            holder.setItemClickListener(new ItemClickListener() {
-                @Override
-                public void onClick(View view, int position, boolean isLongClick) {
-                    Intent intent = new Intent(holder.itemView.getContext(), DetailArticle.class);
-                    intent.putExtra("webURL", articleList.get(position).getUrl());
-                    holder.itemView.getContext().startActivity(intent);
-                }
-            });
 
         } catch (NullPointerException e) {
             Log.e("ERROR", e.getMessage());
